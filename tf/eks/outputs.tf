@@ -37,3 +37,8 @@ output "region" {
   description = "AWS region"
   value       = var.region
 }
+
+output "vpc_id" {
+  description = "AWS region"
+  value       = module.vpc.vpc_id
+}
