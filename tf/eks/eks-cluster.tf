@@ -9,7 +9,7 @@ module "eks" {
   source          = "registry.terraform.io/terraform-aws-modules/eks/aws"
   version         = "~> 18.0"
   cluster_name    = local.cluster_name
-  cluster_version = "1.22"
+  cluster_version = "1.21"
   tags            = { env = "dev" }
 
   # networking
@@ -61,7 +61,7 @@ module "eks" {
       vpc_security_group_ids = [aws_security_group.node_group.id]
 
       # instance settings
-      instance_types = ["t3.micro"]
+      instance_types = ["t3.medium"]
       capacity_type  = "ON_DEMAND"
 
       # capacity config

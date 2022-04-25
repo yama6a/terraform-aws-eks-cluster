@@ -14,16 +14,16 @@ module "vpc" {
   enable_dns_hostnames = true
 
   tags = {
-    "kubernetes.io/cluster/${local.project_name}" = "shared"
+    "kubernetes.io/cluster/${local.cluster_name}" = "owned" // only one cluster can use this vpc
   }
 
   public_subnet_tags = {
-    "kubernetes.io/cluster/${local.project_name}" = "shared"
+    "kubernetes.io/cluster/${local.cluster_name}" = "owned" // only one cluster can use this subnet
     "kubernetes.io/role/elb"                      = "1"
   }
 
   private_subnet_tags = {
-    "kubernetes.io/cluster/${local.project_name}" = "shared"
+    "kubernetes.io/cluster/${local.cluster_name}" = "owned" // only one cluster can use this subnet
     "kubernetes.io/role/internal-elb"             = "1"
   }
 }
