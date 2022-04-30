@@ -4,7 +4,7 @@ module "vpc" {
   source  = "registry.terraform.io/terraform-aws-modules/vpc/aws"
   version = "~> 3.0"
 
-  name                 = "${local.project_name}-vpc"
+  name                 = var.vpc_name
   cidr                 = "10.0.0.0/16"
   azs                  = data.aws_availability_zones.available.names
   private_subnets      = ["10.0.0.0/20", "10.0.16.0/20", "10.0.32.0/20"]
@@ -13,17 +13,31 @@ module "vpc" {
   single_nat_gateway   = true
   enable_dns_hostnames = true
 
-  tags = {
-    "kubernetes.io/cluster/${local.cluster_name}" = "owned" // only one cluster can use this vpc
-  }
+  tags = merge(var.tags, {
+    "kubernetes.io/cluster/${var.cluster_name}" = "owned"
+    // only one cluster can use this vpc and each of its respective subnets
+  })
 
   public_subnet_tags = {
-    "kubernetes.io/cluster/${local.cluster_name}" = "owned" // only one cluster can use this subnet
-    "kubernetes.io/role/elb"                      = "1"
+    "kubernetes.io/role/elb" = "1"
   }
 
   private_subnet_tags = {
-    "kubernetes.io/cluster/${local.cluster_name}" = "owned" // only one cluster can use this subnet
-    "kubernetes.io/role/internal-elb"             = "1"
+    "kubernetes.io/role/internal-elb" = "1"
   }
 }
+
+#resource "aws_security_group" "node_group" {
+#  name_prefix = "node_group"
+#  vpc_id      = module.vpc.vpc_id
+#
+#  ingress {
+#    from_port = 22
+#    to_port   = 22
+#    protocol  = "tcp"
+#
+#    cidr_blocks = [
+#      "10.0.0.0/8",
+#    ]
+#  }
+#}
