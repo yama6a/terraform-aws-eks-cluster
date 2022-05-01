@@ -1,27 +1,29 @@
 provider "aws" {
-  region = var.region
+  region = var.aws_region
 }
 
 locals {
-  cluster_name = "dev-cl"
+  name_prefix  = "${var.project_name}-${var.env}"
+  cluster_name = "${local.name_prefix}-cl"
+  tags         = merge(var.tags, {
+    env       = var.env
+    project   = var.project_name
+    managedBy = "terraform"
+  })
 }
 
 module vpc {
   source       = "./module/vpc"
   cluster_name = local.cluster_name
-  vpc_name     = "dev-vpc"
+  vpc_name     = "${local.name_prefix}-vpc"
+  tags         = local.tags
 }
 
 module eks {
   source            = "./module/eks"
   cluster_name      = local.cluster_name
-  high_availability = false
-  vpc               = {
-    foo        = "123"
-    id         = module.vpc.vpc_id
-    subnet_ids = module.vpc.vpc_private_subnet_ids
-  }
-  tags = {
-    env = "dev"
-  }
+  high_availability = var.high_availability
+  vpc_id            = module.vpc.vpc_id
+  vpc_subnet_ids    = module.vpc.vpc_private_subnet_ids
+  tags              = local.tags
 }
