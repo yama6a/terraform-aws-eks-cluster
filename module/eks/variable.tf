@@ -3,12 +3,14 @@ variable "cluster_name" {
   type        = string
 }
 
-variable "vpc" {
-  description = "VPC Parameters"
-  type        = object({
-    id         = string
-    subnet_ids = set(string)
-  })
+variable "vpc_id" {
+  description = "VPC ID"
+  type        = string
+}
+
+variable "vpc_subnet_ids" {
+  description = "VPC Subnet IDs for cluster nodes"
+  type        = set(string)
 }
 
 variable "tags" {

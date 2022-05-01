@@ -13,8 +13,8 @@ module "eks" {
   tags            = var.tags
 
   # networking
-  vpc_id                          = var.vpc.id
-  subnet_ids                      = var.vpc.subnet_ids
+  vpc_id                          = var.vpc_id
+  subnet_ids                      = var.vpc_subnet_ids
   cluster_endpoint_private_access = true
   cluster_endpoint_public_access  = true
 
@@ -45,19 +45,17 @@ module "eks" {
   }
 
   eks_managed_node_groups = {
-    "${var.cluster_name}-ng-workers" = {
-      # networking
-      subnet_ids = var.vpc.subnet_ids
-      #      vpc_security_group_ids = [aws_security_group.node_group.id] // todo: remove
+    "${var.cluster_name}-ng1" = {
+      subnet_ids = var.vpc_subnet_ids
 
       # instance settings
       # Keep number of network interfaces in mind! EC2 instances have a limit depending on instance-type.
       # Our cluster consumes 8 pods by default (per node?).
       # Number of pods per instance-type: https://github.com/awslabs/amazon-eks-ami/blob/master/files/eni-max-pods.txt
       instance_types = var.high_availability == true ? ["m5.large"] : ["t3.medium"]
-      desired_size   = 1
-      max_size       = var.high_availability == true ? 5 : 1
+      desired_size   = var.high_availability == true ? 3 : 1
       min_size       = var.high_availability == true ? 3 : 1
+      max_size       = var.high_availability == true ? 5 : 1
       update_config  = { max_unavailable = 1 }
     }
   }

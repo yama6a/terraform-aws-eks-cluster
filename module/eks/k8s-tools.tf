@@ -28,15 +28,9 @@ resource "kubectl_manifest" "dashboard-admin-rbac" {
 
 data "kubectl_path_documents" "dashboard-manifests" { pattern = "${path.module}/k8s/dashboard.yaml" }
 resource "kubectl_manifest" "dashboard" {
+  # todo: Ensure namespace exists before running this,
+  #       becuase this manifest runs all parts in parallel and the namespace might not exist yet when needed.
+  #       Current workaround: re-run `tf apply`
   count     = length(data.kubectl_path_documents.dashboard-manifests.documents)
   yaml_body = element(data.kubectl_path_documents.dashboard-manifests.documents, count.index)
-}
-
-// todo: make optional via variable
-# sample 2048 app
-data "kubectl_path_documents" "sample-app-manifests" { pattern = "${path.module}/k8s/sample-app.yaml" }
-resource "kubectl_manifest" "sample-app" {
-  depends_on = [module.lb-controller]
-  count      = length(data.kubectl_path_documents.sample-app-manifests.documents)
-  yaml_body  = element(data.kubectl_path_documents.sample-app-manifests.documents, count.index)
 }
