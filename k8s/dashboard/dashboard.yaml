@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# TO UPDATE: Replace this file with latest version from: https://github.com/kubernetes/dashboard/releases
+
 apiVersion: v1
 kind: Namespace
 metadata:
