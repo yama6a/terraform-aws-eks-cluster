@@ -23,3 +23,9 @@ variable tags {
   default     = {}
   description = "Map of tags to be attached to all AWS resources"
 }
+
+variable "custom_domain" {
+  description = "Your custom domain, managed by Route53 (hosted zone must already exist)"
+  type        = string
+  default     = ""
+}

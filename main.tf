@@ -26,4 +26,5 @@ module eks {
   vpc_id            = module.vpc.vpc_id
   vpc_subnet_ids    = module.vpc.vpc_private_subnet_ids
   tags              = local.tags
+  custom_domain     = var.custom_domain
 }
