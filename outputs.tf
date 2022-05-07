@@ -13,6 +13,11 @@ output "cluster_name" {
   value       = module.eks.cluster_name
 }
 
+output "cluster_node_group_name" {
+  description = "EKS cluster NodeGroup Names."
+  value       = module.eks.node_group_name
+}
+
 output "vpc_id" {
   description = "AWS region"
   value       = module.vpc.vpc_id

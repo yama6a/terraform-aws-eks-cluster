@@ -5,6 +5,10 @@ resource "aws_kms_key" "eks_secrets_key" {
   enable_key_rotation      = true
 }
 
+locals {
+  node_group_name = "${var.cluster_name}-ng1"
+}
+
 module "eks" {
   source          = "registry.terraform.io/terraform-aws-modules/eks/aws"
   version         = "~> 18.0"
@@ -45,14 +49,14 @@ module "eks" {
   }
 
   eks_managed_node_groups = {
-    "${var.cluster_name}-ng1" = {
+    "${local.node_group_name}" = {
       subnet_ids = var.vpc_subnet_ids
 
       # instance settings
       # Keep number of network interfaces in mind! EC2 instances have a limit depending on instance-type.
       # Our cluster consumes 8 pods by default (per node?).
       # Number of pods per instance-type: https://github.com/awslabs/amazon-eks-ami/blob/master/files/eni-max-pods.txt
-      instance_types = var.high_availability == true ? ["m5.large"] : ["t3.medium"]
+      instance_types = var.high_availability == true ? ["m5.large"] : ["t3.small"]
       desired_size   = var.high_availability == true ? 3 : 1
       min_size       = var.high_availability == true ? 3 : 1
       max_size       = var.high_availability == true ? 5 : 1
