@@ -8,6 +8,11 @@ output "cluster_name" {
   value       = var.cluster_name
 }
 
+output "node_group_name" {
+  description = "EKS cluster's NodeGroup Names."
+  value       = local.node_group_name
+}
+
 output "cluster_arn" {
   description = "EKS cluster ARN."
   value       = module.eks.cluster_arn

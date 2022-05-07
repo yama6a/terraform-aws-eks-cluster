@@ -1,13 +1,20 @@
-### Auto-Installed k8s deployments
+## Setup
 
-- metrics server
-- k8s dashboard
-
-### Configure k8s context
-`aws eks --region $(terraform output -raw region) update-kubeconfig --name $(terraform output -raw cluster_name)`
+1. run `terraform apply`
+2. Configure k8s context:
+    - `aws eks --region $(terraform output -raw region) update-kubeconfig --name $(terraform output -raw cluster_name)`
+3. Activate [CNI Prefix Delegation](https://docs.aws.amazon.com/eks/latest/userguide/cni-increase-ip-addresses.html) (
+   Not automatable due to: [Issue#1](https://github.com/aws/amazon-vpc-cni-k8s/issues/1571)
+   , [Issue #2](https://github.com/aws/containers-roadmap/issues/1333)):
+    - `kubectl set env daemonset aws-node -n kube-system ENABLE_PREFIX_DELEGATION=true`
+4. Replace EKS Node-Groups to propagate Prefix Delegation:
+    - `terraform apply -replace="module.eks.module.eks.module.eks_managed_node_group[\"$(terraform output -raw cluster_node_group_name)\"].aws_eks_node_group.this[0]"`
+5. (optional) Install Metrics server (needed to CPU/Mem based HPAs):
+    - `kubectl apply -f k8s/metrics-server.yaml`
 
 ### K8S Dashboard
 
+- install dashboard `kubectl apply -f k8s/dashboard`
 - generate auth token for
   dashboard: `kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep admin-user-token | awk '{print $1}') | grep token: | sed 's/token:.* ey/ey/'`
 - proxy to dashboard: `kubectl proxy`
@@ -22,7 +29,7 @@
 3. Wait about a minute or two for the Load-Balancer to fire up.
 4. Copy/paste the **ADDRESS** from the output into your browser (http not https) - and done.
 
-#### Caution
+## Caution
 Remember to `kubectl delete` all apps that use an ALB-ingress before destroying the cluster with Terraform. Otherwise
 the remainders that were created by the ALB-controller (`./module/eks/alb-controller.tf`) will prevent the VPC from
 being destroyed. If you messed up like this, you have to manually delete the following resources (check region) and
