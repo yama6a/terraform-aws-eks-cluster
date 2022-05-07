@@ -9,10 +9,10 @@
     - `kubectl set env daemonset aws-node -n kube-system ENABLE_PREFIX_DELEGATION=true`
 4. Replace EKS Node-Groups to propagate Prefix Delegation:
     - `terraform apply -replace="module.eks.module.eks.module.eks_managed_node_group[\"$(terraform output -raw cluster_node_group_name)\"].aws_eks_node_group.this[0]"`
-5. (optional) Install Metrics server (needed to CPU/Mem based HPAs):
+5. (optional) Install Metrics server (required for CPU/Mem based HPAs):
     - `kubectl apply -f k8s/metrics-server.yaml`
 
-### K8S Dashboard
+### K8S Dashboard (optional)
 
 - install dashboard `kubectl apply -f k8s/dashboard`
 - generate auth token for
@@ -24,15 +24,15 @@
 
 ### Example App with ALB-Ingress
 
-1. Run `kubectl apply -f examples/sample-app.yaml` to deploy the app
+1. Run `kubectl apply -f k8s/sample-app.yaml` to deploy the app
 2. Run `kubectl get ingress/ingress-2048 -n game-2048` to ensure the ALB got created and the ingress has an **ADDRESS**
 3. Wait about a minute or two for the Load-Balancer to fire up.
-4. Copy/paste the **ADDRESS** from the output into your browser (http not https) - and done.
+4. Copy/paste the **ADDRESS** from the output into your browser (http, not https) - and done.
 
 ## Caution
 Remember to `kubectl delete` all apps that use an ALB-ingress before destroying the cluster with Terraform. Otherwise
 the remainders that were created by the ALB-controller (`./module/eks/alb-controller.tf`) will prevent the VPC from
-being destroyed. If you messed up like this, you have to manually delete the following resources (check region) and
+being destroyed. If you messed it up, you have to manually delete the following resources (check region) and
 re-run `terraform destroy`:
 
 - EC2 Target

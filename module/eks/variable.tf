@@ -24,3 +24,9 @@ variable "high_availability" {
   type        = bool
   default     = false
 }
+
+variable "custom_domain" {
+  description = "Your custom domain, managed by Route53 (hosted zone must already exist)"
+  type        = string
+  default     = ""
+}
