@@ -25,8 +25,8 @@ variable "high_availability" {
   default     = false
 }
 
-variable "custom_domain" {
-  description = "Your custom domain, managed by Route53 (hosted zone must already exist)"
-  type        = string
-  default     = ""
+variable "domains" {
+  description = "Domains to be hosted on the cluster which will receive auto-support for external DNS and ACM certificates in services' ingresses."
+  type        = set(string)
+  default     = []
 }

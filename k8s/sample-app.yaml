@@ -49,10 +49,13 @@ metadata:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/group.name: sample-app  # use the same group-name to share the ALB (they cost money!)
-    # external-dns.alpha.kubernetes.io/hostname: my-custom-domain.edu # if you have a custom domain, add it here and in the TF variable. (this supports a comma-separated list, but the TF module currently only supports one or none - ToDo: fix this)
+    #alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80,"HTTPS":443}]' # enable SSL (the ALB-Controller automatically searches for the HOST specified in the rules below and pegs a matching cert to the ALB)
+    #external-dns.alpha.kubernetes.io/hostname: 2048.example.com,2048.example.edu # if you have a custom domain, add it here and in the TF variable. (this supports a comma-separated list)
 spec:
   ingressClassName: alb
   rules:
+
+    # catch-all rule for the ingress (all domains, all paths)
     - http:
         paths:
           - path: /
@@ -62,3 +65,20 @@ spec:
                 name: service-2048
                 port:
                   number: 80
+
+    # uncomment below to route traffic only to this ingress, if host is 2048.example.com (and comment out block above)
+    #    - host: 2048.example.com
+    #      http: &http_rules
+    #        paths:
+    #          - path: /
+    #            pathType: Prefix
+    #            backend:
+    #              service:
+    #                name: service-2048
+    #                port:
+    #                  number: 80
+
+    # uncomment below to route traffic to this ingress, ALSO for requests that contain host-header for 2048.example.edu
+    #           i.e. if this ingress should serve multiple domains.
+    #    - host: 2048.example.edu
+    #      http: *http_rules  # this referenced the rules above, so they don't have to be repeated.
