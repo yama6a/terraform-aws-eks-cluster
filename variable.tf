@@ -1,7 +1,6 @@
 variable "project_name" {
   type        = string
   description = "Name of your project, used in resource names"
-  default     = "sandbox"
 }
 
 variable "env" {
@@ -18,7 +17,6 @@ variable "high_availability" {
 variable "aws_region" {
   type        = string
   description = "AWS region"
-  default     = "eu-north-1"
 }
 
 variable tags {
@@ -28,10 +26,7 @@ variable tags {
 }
 
 variable "domains" {
-  type    = map(set(string))
-  default = {
-    "example.com" = ["www.example.com", "api.example.com"],
-    "example.edu" = ["*.example.edu", "*.api.example.edu"],
-  }
-  description = "Map of domains => [set(subject_alternative_names)] to be hosted on the cluster which automatically receive ACM certificates. ALL TLDs MUST HAVE AN EXISTING HOSTED ZONE IN Route53!"
+  type        = map(set(string))
+  default     = {}
+  description = "Map of {domains => [set(subject_alternative_names)]} to be hosted on the cluster which automatically receive ACM certificates. ALL TLDs MUST HAVE AN EXISTING HOSTED ZONE IN Route53!"
 }
