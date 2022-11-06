@@ -28,5 +28,11 @@ variable tags {
 variable "domains" {
   type        = map(set(string))
   default     = {}
-  description = "Map of {domains => [set(subject_alternative_names)]} to be hosted on the cluster which automatically receive ACM certificates. ALL TLDs MUST HAVE AN EXISTING HOSTED ZONE IN Route53!"
+  description = "Map of {domain => [set(subject_alternative_names)]} to be hosted on the cluster which automatically receive ACM certificates. E.g. {\"example.com\"  = [\"api.example.com\", \"*.api.example.com\", \"www.example.com\"]} ALL TLDs MUST HAVE AN EXISTING HOSTED ZONE IN Route53!"
+}
+
+variable "services" {
+  type = set(string)
+  default = []
+  description = "List of service-names to deploy be hosted on the cluster."
 }

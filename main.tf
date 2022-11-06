@@ -31,10 +31,17 @@ module eks {
 
 module acm {
   source = "./module/acm"
-
   for_each = var.domains
 
   tags                      = local.tags
   domain                    = each.key
   subject_alternative_names = each.value
+}
+
+module ecr {
+  source          = "./module/ecr"
+  for_each = var.services
+
+  tags            = local.tags
+  repository_name = "${local.name_prefix}/${each.value}-repo"
 }
