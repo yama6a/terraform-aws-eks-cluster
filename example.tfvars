@@ -9,3 +9,7 @@ domains           = {
 tags = {
   terraformSource = "https://github.com/ymakhloufi/terraform-aws-eks-cluster"
 }
+services = [
+  "my-awesome-project",
+  "test-project"
+]
