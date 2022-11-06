@@ -30,7 +30,7 @@ module eks {
 }
 
 module acm {
-  source = "./module/acm"
+  source   = "./module/acm"
   for_each = var.domains
 
   tags                      = local.tags
@@ -39,7 +39,7 @@ module acm {
 }
 
 module ecr {
-  source          = "./module/ecr"
+  source   = "./module/ecr"
   for_each = var.services
 
   tags            = local.tags
