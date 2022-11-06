@@ -22,3 +22,8 @@ output "vpc_id" {
   description = "AWS region"
   value       = module.vpc.vpc_id
 }
+
+output "ecr_repository_urls" {
+  description = "ECR repository URLs"
+  value       = {for k, repo in module.ecr : k => repo.repository_url}
+}
