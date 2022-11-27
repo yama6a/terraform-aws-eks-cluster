@@ -31,7 +31,7 @@ variable "domains" {
   description = "Map of {domain => [set(subject_alternative_names)]} to be hosted on the cluster which automatically receive ACM certificates. (For an example, see example.tfvars). ALL TLDs MUST HAVE AN EXISTING HOSTED ZONE IN Route53!"
 }
 
-variable "services" {
+variable "ecr_repos" {
   type = set(string)
   default = []
   description = "List of services that need an ECR repo."
