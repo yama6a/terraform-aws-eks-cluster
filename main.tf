@@ -40,10 +40,11 @@ module acm {
 
 module ecr {
   source   = "./module/ecr"
-  for_each = var.services
+  for_each = var.ecr_repos
 
   tags            = local.tags
   repository_name = "${local.name_prefix}/${each.value}-repo"
+  service_name    = each.value
 }
 
 module dynamodb {
