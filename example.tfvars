@@ -9,7 +9,13 @@ domains           = {
 tags = {
   terraformSource = "https://github.com/ymakhloufi/terraform-aws-eks-cluster"
 }
-services = [
+
+ecr_repos = [
+  "my-awesome-project",
+  "test-project"
+]
+
+dynamodb_services = [
   "my-awesome-project",
   "test-project"
 ]

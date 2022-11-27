@@ -30,10 +30,10 @@
 4. Copy/paste the **ADDRESS** from the output into your browser (http, not https) - and done.
 
 ## Wiping The Cluster
-Remember to delete all containers from all ECR repos, and to `kubectl delete` all apps that use an ALB-ingress before destroying the cluster with Terraform. Otherwise
-the remainders that were created by the ALB-controller (`./module/eks/alb-controller.tf`) will prevent the VPC from
-being destroyed. If you messed it up, you have to manually delete the following resources (check region) and
-re-run `terraform destroy`:
+Remember to delete all containers from all ECR repos, and to `kubectl delete` all apps that use an ALB-ingress before 
+destroying the cluster with Terraform. Otherwise the remainders that were created by the ALB-controller 
+(`./module/eks/alb-controller.tf`) will prevent the VPC from being destroyed. If you messed it up, you have to 
+manually delete the following resources (check region) and re-run `terraform destroy`:
 
 - EC2 Target
   Groups: [https://console.aws.amazon.com/ec2/v2/home?#TargetGroups:tag:elbv2.k8s.aws/cluster=*](https://console.aws.amazon.com/ec2/v2/home?#TargetGroups:tag:elbv2.k8s.aws/cluster=*)
