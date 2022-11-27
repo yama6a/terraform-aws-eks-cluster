@@ -30,7 +30,7 @@
 4. Copy/paste the **ADDRESS** from the output into your browser (http, not https) - and done.
 
 ## Wiping The Cluster
-Remember to `kubectl delete` all apps that use an ALB-ingress before destroying the cluster with Terraform. Otherwise
+Remember to delete all containers from all ECR repos, and to `kubectl delete` all apps that use an ALB-ingress before destroying the cluster with Terraform. Otherwise
 the remainders that were created by the ALB-controller (`./module/eks/alb-controller.tf`) will prevent the VPC from
 being destroyed. If you messed it up, you have to manually delete the following resources (check region) and
 re-run `terraform destroy`:
