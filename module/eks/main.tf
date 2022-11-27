@@ -3,6 +3,7 @@ resource "aws_kms_key" "eks_secrets_key" {
   customer_master_key_spec = "SYMMETRIC_DEFAULT"
   description              = "Key for EKS Cluster Secrets Encryption"
   enable_key_rotation      = true
+  tags = var.tags
 }
 
 locals {

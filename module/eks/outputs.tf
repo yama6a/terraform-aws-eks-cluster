@@ -32,3 +32,13 @@ output "config_map_aws_auth" {
   description = "A kubernetes configuration to authenticate to this EKS cluster."
   value       = module.eks.aws_auth_configmap_yaml
 }
+
+output "oidc_arn" {
+  description = "The ARN of the IAM OpenID Connect provider."
+  value       = module.eks.oidc_provider_arn
+}
+
+output "oidc_url" {
+  description = "The URL of the IAM OpenID Connect provider."
+  value       = module.eks.oidc_provider
+}
