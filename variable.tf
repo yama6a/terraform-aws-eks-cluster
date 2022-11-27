@@ -34,5 +34,11 @@ variable "domains" {
 variable "services" {
   type = set(string)
   default = []
-  description = "List of service-names to deploy be hosted on the cluster."
+  description = "List of services that need an ECR repo."
+}
+
+variable "dynamodb_services" {
+  type = set(string)
+  default = []
+  description = "List of services that need access to dynamoDB."
 }
