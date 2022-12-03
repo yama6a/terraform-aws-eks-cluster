@@ -8,8 +8,3 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
-
-variable "service_name" {
-  description = "Name of the Service that needs an ECR Repository"
-  type        = string
-}
