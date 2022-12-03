@@ -43,7 +43,7 @@ variable "instance_class" {
       "db.t4g.medium",
       "db.m6g.large"
     ], var.instance_class)
-    error_message = "Allowed values for instance_class are `db.t3.micro`, `db.t4g.small`, `db.t4g.medium`, `db.m6g.large`."
+    error_message = "Allowed values for instance_class are `db.t4g.micro`, `db.t4g.small`, `db.t4g.medium`, `db.m6g.large`."
   }
 }
 
