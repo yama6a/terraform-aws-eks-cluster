@@ -38,24 +38,31 @@ module acm {
   subject_alternative_names = each.value
 }
 
-module ecr {
-  source   = "./module/ecr"
-  for_each = var.ecr_repos
+module service_resources {
+  source   = "./module/service_resources"
+  for_each = var.services
 
-  tags            = local.tags
-  repository_name = "${local.name_prefix}/${each.value}-repo"
-  service_name    = each.value
+  // globals
+  tags                  = local.tags
+  vpc_id                = module.vpc.vpc_id
+  vpc_subnet_group_name = module.vpc.db_subnet_group_name
+  db_security_group_id  = module.eks.cluster_security_group_id
+  oidc_url              = module.eks.oidc_url
+  oidc_arn              = module.eks.oidc_arn
+  cluster_id            = module.eks.cluster_id
+
+  // service specific
+  service_name           = each.key
+  enable_dynamodb_access = each.value.enable_dynamodb_access
+  create_ecr_repo        = each.value.create_ecr_repo
+  postgres_databases     = each.value.postgres_dbs
 }
 
-module dynamodb {
-  source   = "./module/dynamodb"
-  for_each = var.dynamodb_services
-
-  tags = local.tags
-
-  oidc_arn     = module.eks.oidc_arn
-  oidc_url     = module.eks.oidc_url
-  service_name = each.value
+data "aws_eks_cluster" "cluster" {
+  name = module.eks.cluster_id
+}
+data "aws_eks_cluster_auth" "cluster" {
+  name = module.eks.cluster_id
 }
 
 provider "kubernetes" {
@@ -63,6 +70,3 @@ provider "kubernetes" {
   token                  = data.aws_eks_cluster_auth.cluster.token
   cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
 }
-
-data "aws_eks_cluster" "cluster" { name = module.eks.cluster_id }
-data "aws_eks_cluster_auth" "cluster" { name = module.eks.cluster_id }

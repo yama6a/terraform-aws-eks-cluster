@@ -11,9 +11,7 @@ resource "aws_ecr_repository" "ecr_repository" {
   image_tag_mutability = "IMMUTABLE"
   force_delete         = true // this allows `terraform destroy` to delete the repository even if it contains images
 
-  tags = merge(var.tags, {
-    service = var.service_name
-  })
+  tags = var.tags
 
   encryption_configuration {
     encryption_type = "KMS"
