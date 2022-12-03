@@ -1,9 +1,6 @@
 resource "aws_iam_policy" "dynamodb_policy" {
   name = "${var.service_name}-dynamodb-policy"
-  # merge tags
-  tags = merge(var.tags, {
-    service = var.service_name
-  })
+  tags = var.tags
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -50,28 +47,4 @@ resource "aws_iam_policy" "dynamodb_policy" {
       }
     ]
   })
-}
-
-resource "kubernetes_namespace" "ns" {
-  metadata {
-    name = "${var.service_name}-ns"
-  }
-}
-
-module "irsa" {
-  source = "registry.terraform.io/Young-ook/eks/aws//modules/iam-role-for-serviceaccount"
-
-  name           = "${var.service_name}-irsa"
-  namespace      = kubernetes_namespace.ns.metadata[0].name
-  serviceaccount = "${var.service_name}-sa"
-  oidc_url       = var.oidc_url
-  oidc_arn       = var.oidc_arn
-
-  tags           = merge(var.tags, {
-    service = var.service_name
-  })
-
-  policy_arns = [
-    aws_iam_policy.dynamodb_policy.arn
-  ]
 }
