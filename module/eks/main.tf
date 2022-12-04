@@ -28,7 +28,7 @@ module "eks" {
   cluster_addons            = {
     coredns    = {}
     kube-proxy = {}
-    vpc-cni    = {}
+    # vpc-cni  = {} # do not install vpc-cni explicitly. It will be installed implicitly, but then replaced by vcni.tf
   }
 
   cluster_encryption_config = [
