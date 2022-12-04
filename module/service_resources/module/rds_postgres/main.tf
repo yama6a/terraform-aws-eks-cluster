@@ -4,6 +4,7 @@ module "rds_postgres" {
   source = "registry.terraform.io/terraform-aws-modules/rds/aws"
 
   identifier = "${var.service_name}-${var.instance_name}"
+  db_name    = replace(var.instance_name, "-", "_")
   tags       = var.tags
 
   engine                              = "postgres"
