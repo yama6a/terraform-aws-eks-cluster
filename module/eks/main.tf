@@ -26,10 +26,11 @@ module "eks" {
   # eks cluster settings
   cluster_enabled_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
   cluster_addons            = {
-    coredns    = { resolve_conflicts = "OVERWRITE" }
+    coredns    = {}
     kube-proxy = {}
-    vpc-cni    = { resolve_conflicts = "OVERWRITE" }
+    vpc-cni    = {}
   }
+
   cluster_encryption_config = [
     {
       provider_key_arn = aws_kms_key.eks_secrets_key.arn
@@ -46,7 +47,7 @@ module "eks" {
     # disk size workaround: https://github.com/terraform-aws-modules/terraform-aws-eks/issues/1739
     create_launch_template = false
     launch_template_name   = ""
-    disk_size              = var.high_availability == true ? 20 : 10 # in GB
+    disk_size              = var.high_availability == true ? 50 : 10 # in GB
   }
 
   eks_managed_node_groups = {
