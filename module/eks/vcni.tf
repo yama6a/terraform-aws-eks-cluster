@@ -19,17 +19,19 @@ resource "null_resource" "remove_aws_vpc_cni_plugin" {
       CLUSTER_CA       = data.aws_eks_cluster.cluster.certificate_authority.0.data
       CLUSTER_TOKEN    = data.aws_eks_cluster_auth.cluster.token
     }
-    command = format("%s/remove-aws-vpc-cni-plugin.sh", path.module)
+    command     = format("%s/remove-aws-vpc-cni-plugin.sh", path.module)
   }
 }
 
 resource "helm_release" "vcni" {
-  depends_on = [null_resource.remove_aws_vpc_cni_plugin]
   repository = "https://aws.github.io/eks-charts"
+  depends_on = [
+    null_resource.remove_aws_vpc_cni_plugin
+  ]
 
-  name       = "aws-vpc-cni"
-  chart      = "aws-vpc-cni"
-  namespace  = "kube-system"
+  name      = "aws-vpc-cni"
+  chart     = "aws-vpc-cni"
+  namespace = "kube-system"
 
   set {
     name  = "env.ENABLE_PREFIX_DELEGATION"
