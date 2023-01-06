@@ -37,6 +37,17 @@ delete the following resources (check region) and re-run `terraform destroy`:
 - VPC Security
   Groups: [https://console.aws.amazon.com/vpc/home?#securityGroups:tag:ingress.k8s.aws/resource=ManagedLBSecurityGroup](https://console.aws.amazon.com/vpc/home?#securityGroups:tag:ingress.k8s.aws/resource=ManagedLBSecurityGroup)
 
+If the terraform-detroy action gets stuck upon deleting a k8s namespace, do the following:
+```sh
+(
+NAMESPACE=my-awesome-service-ns
+kubectl proxy &
+kubectl get namespace $NAMESPACE -o json |jq '.spec = {"finalizers":[]}' >temp.json
+curl -k -H "Content-Type: application/json" -X PUT --data-binary @temp.json 127.0.0.1:8001/api/v1/namespaces/$NAMESPACE/finalize
+rm temp.json
+)
+```
+
 ## Replacing SSL Certificates
 
 When you add or remove subject-alternative-names to/from your SSL certificate, you need to replace the existing
