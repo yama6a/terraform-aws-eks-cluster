@@ -37,12 +37,13 @@ variable "instance_class" {
   default     = "db.t4g.micro"
 
   validation {
-    condition     = contains([
+    condition = contains([
       "db.t4g.micro",
       "db.t4g.small",
       "db.t4g.medium",
       "db.m6g.large"
     ], var.instance_class)
+
     error_message = "Allowed values for instance_class are `db.t4g.micro`, `db.t4g.small`, `db.t4g.medium`, `db.m6g.large`."
   }
 }

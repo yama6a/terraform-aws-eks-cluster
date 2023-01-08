@@ -5,21 +5,22 @@ provider "aws" {
 locals {
   name_prefix  = "${var.project_name}-${var.env}"
   cluster_name = "${local.name_prefix}-cl"
-  tags         = merge(var.tags, {
+
+  tags = merge(var.tags, {
     env       = var.env
     project   = var.project_name
     managedBy = "terraform"
   })
 }
 
-module vpc {
+module "vpc" {
   source       = "./module/vpc"
   cluster_name = local.cluster_name
   vpc_name     = "${local.name_prefix}-vpc"
   tags         = local.tags
 }
 
-module eks {
+module "eks" {
   source            = "./module/eks"
   cluster_name      = local.cluster_name
   high_availability = var.high_availability
@@ -29,7 +30,7 @@ module eks {
   domains           = keys(var.domains)
 }
 
-module acm {
+module "acm" {
   source   = "./module/acm"
   for_each = var.domains
 
@@ -38,7 +39,7 @@ module acm {
   subject_alternative_names = each.value
 }
 
-module service_resources {
+module "service_resources" {
   source   = "./module/service_resources"
   for_each = var.services
 

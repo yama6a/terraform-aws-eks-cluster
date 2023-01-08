@@ -4,11 +4,11 @@ resource "aws_iam_policy" "dynamodb_policy" {
 
   policy = jsonencode({
     Version = "2012-10-17"
-    Statement: [
+    Statement : [
       {
-        Sid      = "VisualEditor0"
-        Effect   = "Allow"
-        Action   = [
+        Sid    = "VisualEditor0"
+        Effect = "Allow"
+        Action = [
           "dynamodb:BatchGetItem",
           "dynamodb:BatchWriteItem",
           "dynamodb:UntagResource",
@@ -27,15 +27,15 @@ resource "aws_iam_policy" "dynamodb_policy" {
         Resource = "arn:aws:dynamodb:*:902409284726:table/${var.service_name}.*"
       },
       {
-        "Sid": "VisualEditor1",
-        "Effect": "Allow",
-        "Action": "dynamodb:ListTables",
-        "Resource": "*"
+        "Sid" : "VisualEditor1",
+        "Effect" : "Allow",
+        "Action" : "dynamodb:ListTables",
+        "Resource" : "*"
       },
       {
-        Sid      = "VisualEditor2"
-        Effect   = "Allow"
-        Action   = [
+        Sid    = "VisualEditor2"
+        Effect = "Allow"
+        Action = [
           "dynamodb:Scan",
           "dynamodb:Query",
           "dynamodb:GetRecords"

@@ -14,7 +14,7 @@ module "vpc" {
   enable_dns_hostnames = true
 
   create_database_subnet_group = true
-  database_subnets = ["10.0.96.0/23", "10.0.98.0/23", "10.0.100.0/23"]
+  database_subnets             = ["10.0.96.0/23", "10.0.98.0/23", "10.0.100.0/23"]
 
   tags = merge(var.tags, {
     "kubernetes.io/cluster/${var.cluster_name}" = "owned"
