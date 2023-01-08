@@ -10,7 +10,7 @@ resource "kubernetes_namespace" "ns" {
 
 resource "kubernetes_service_account" "sa" {
   metadata {
-    name = local.sa_name
+    name      = local.sa_name
     namespace = kubernetes_namespace.ns.metadata.0.name
     annotations = {
       "eks.amazonaws.com/role-arn" = module.irsa.arn

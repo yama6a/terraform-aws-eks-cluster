@@ -4,7 +4,7 @@ locals {
   })
 }
 
-module ecr {
+module "ecr" {
   count  = var.create_ecr_repo ? 1 : 0
   source = "./module/ecr"
 
@@ -12,7 +12,7 @@ module ecr {
   repository_name = "${var.service_name}-repo"
 }
 
-module dynamodb {
+module "dynamodb" {
   count  = var.enable_dynamodb_access ? 1 : 0
   source = "./module/dynamodb"
 
@@ -20,9 +20,9 @@ module dynamodb {
   service_name = var.service_name
 }
 
-module postgres {
-  source   = "./module/rds_postgres"
-  count = length(var.postgres_databases)
+module "postgres" {
+  source = "./module/rds_postgres"
+  count  = length(var.postgres_databases)
 
   tags                      = local.tags
   cluster_security_group_id = var.db_security_group_id
@@ -36,7 +36,7 @@ module postgres {
   deletion_protection = var.postgres_databases[count.index].deletion_protection
 }
 
-module irsa {
+module "irsa" {
   source = "./module/irsa"
 
   tags         = local.tags

@@ -9,7 +9,9 @@ resource "aws_kms_key" "ecr_encryption_key" {
 resource "aws_ecr_repository" "ecr_repository" {
   name                 = var.repository_name
   image_tag_mutability = "IMMUTABLE"
-  force_delete         = true // this allows `terraform destroy` to delete the repository even if it contains images
+
+  // this allows `terraform destroy` to delete the repository even if it contains images
+  force_delete = true
 
   tags = var.tags
 
@@ -31,12 +33,14 @@ resource "aws_ecr_lifecycle_policy" "expiry_policy" {
       {
         rulePriority = 1
         description  = "Expire images except latest 30"
-        selection    = {
+
+        selection = {
           tagStatus   = "any"
           countType   = "imageCountMoreThan"
           countNumber = 30
         }
-        action       = {
+
+        action = {
           type = "expire"
         }
       }
