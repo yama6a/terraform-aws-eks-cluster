@@ -25,10 +25,17 @@
 
 ## Wiping The Cluster
 
-Remember to delete all containers from all ECR repos, and to `kubectl delete` all apps that use an ALB-ingress before
-destroying the cluster with Terraform. Otherwise the remainders that were created by the ALB-controller
-(`./module/eks/alb-controller.tf`) will prevent the VPC from being destroyed. If you messed it up, you have to manually
-delete the following resources (check region) and re-run `terraform destroy`:
+### Delete ALB resources
+
+Delete all ingresses that use the ALB controller
+
+- `kubectl delete ingress --all -n <namespace>`
+- or delete them by referencing your manitests: `kubectl delete -f ./path/to/manifests`
+- and then WAIT about 2 minutes for the ALB to delete all attached resources, such as security groups, listeners, etc
+
+If you don't do this (including waiting), the remainders that were created by the ALB-controller
+(`./module/eks/alb-controller.tf`) will prevent the VPC and service-namespaces from being destroyed. If you messed it
+up, you have to manually delete the following resources (check region) and re-run `terraform destroy`:
 
 - EC2 Target
   Groups: [https://console.aws.amazon.com/ec2/v2/home?#TargetGroups:tag:elbv2.k8s.aws/cluster=*](https://console.aws.amazon.com/ec2/v2/home?#TargetGroups:tag:elbv2.k8s.aws/cluster=*)
@@ -37,7 +44,8 @@ delete the following resources (check region) and re-run `terraform destroy`:
 - VPC Security
   Groups: [https://console.aws.amazon.com/vpc/home?#securityGroups:tag:ingress.k8s.aws/resource=ManagedLBSecurityGroup](https://console.aws.amazon.com/vpc/home?#securityGroups:tag:ingress.k8s.aws/resource=ManagedLBSecurityGroup)
 
-If the terraform-detroy action gets stuck upon deleting a k8s namespace, do the following:
+If the terraform-destroy action gets stuck upon deleting a k8s namespace, wipe them by hand by doing the following:
+
 ```sh
 (
 NAMESPACE=my-awesome-service-ns
@@ -47,6 +55,25 @@ curl -k -H "Content-Type: application/json" -X PUT --data-binary @temp.json 127.
 rm temp.json
 )
 ```
+
+### Delete ECR references
+
+Terraform will attempt and fail to delete the ECR repos that are referenced by active k8s manifests (deployments, pods).
+To make sure it doesn't get stuck deleting anything, make sure to first delete all deployments and pods that reference
+the ECR repos.
+
+- `kubectl delete deployment --all -n <namespace>`
+- `kubectl delete pod --all -n <namespace>`
+- or delete them by referencing your manitests: `kubectl delete -f ./path/to/manifests`
+- and then WAIT ~1 minute for the control plane to wipe all pods and deployments that reference images in the ECR repos.
+
+If it still fails destroying the ECR repo, you might have to manually delete all images in the ECR repo first. This
+shouldn't be an issue, because we set the repo ro force_delete, but it has happened in the past, so be warned.
+
+### NOW Delete all AWS resources
+
+- `terraform destroy [-var-file=my_env.tfvars]`
+- confirm the prompt with "yes"
 
 ## Replacing SSL Certificates
 
