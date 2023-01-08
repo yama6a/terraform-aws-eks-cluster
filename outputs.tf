@@ -22,3 +22,21 @@ output "vpc_id" {
   description = "AWS region"
   value       = module.vpc.vpc_id
 }
+
+output "ecr_repo_urls" {
+  value = [
+  for service in module.service_resources : service.ecr_repository_url
+  ]
+}
+
+output "postgres_password_secret_ARNs" {
+  value = [
+  for service in module.service_resources : service.asm_postgres_db_password_arns
+  ]
+}
+
+output "postgres_hosts" {
+  value = [
+  for service in module.service_resources : service.rds_postgres_hosts
+  ]
+}
