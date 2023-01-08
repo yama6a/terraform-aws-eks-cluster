@@ -9,8 +9,7 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@main
-      - name: Run k8s-lint
-        uses: azure/k8s-lint@v1
+      - name: Scan repo with kube-linter
+        uses: stackrox/kube-linter-action@v1.0.4
         with:
-          manifests: |
-            k8s/*.yaml
+          directory: k8s
