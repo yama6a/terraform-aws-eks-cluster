@@ -91,6 +91,7 @@ module "security_group" {
 }
 
 
+// used for IAM auth, doesn't properly work at the moment, so we're using user/pw auth via secret manager below
 resource "aws_iam_policy" "rds_iam_policy" {
   name = "${var.service_name}-${var.instance_name}-rds-policy"
   tags = var.tags
@@ -99,12 +100,44 @@ resource "aws_iam_policy" "rds_iam_policy" {
     Version = "2012-10-17"
     Statement: [
       {
+        // allow SA connect to DBs via IAM authentication
+        // (doesn't quite work yet. With root credentials it works, with SA credentials generated token is not valid...)
         Effect   = "Allow"
         Action   = [
           "rds-db:connect",
         ],
         Resource = "${module.rds_postgres.db_instance_arn}/${module.rds_postgres.db_instance_username}"
       },
+      {
+        // allow SA to retrieve the db password from aws secrets manager
+        Effect   = "Allow"
+        Action   = [
+          "secretsmanager:GetResourcePolicy",
+          "secretsmanager:GetSecretValue",
+          "secretsmanager:DescribeSecret",
+          "secretsmanager:ListSecretVersionIds"
+        ],
+        Resource = aws_secretsmanager_secret.password.arn
+      },
     ]
   })
+}
+
+// When destroying TF resources, secrets still hang around in AWS while they are scheduled for deletion.
+// So, we add a random suffix to the secret name to ensure that the secret can be created again with the "same" name.
+resource "random_string" "random" {
+  length  = 8
+  numeric = true
+  lower   = true
+  special = false
+  upper   = false
+}
+
+resource "aws_secretsmanager_secret" "password" {
+  name = "${var.service_name}-${var.instance_name}-rds-password-${random_string.random.result}"
+}
+
+resource "aws_secretsmanager_secret_version" "password" {
+  secret_id     = aws_secretsmanager_secret.password.id
+  secret_string = module.rds_postgres.db_instance_password
 }
