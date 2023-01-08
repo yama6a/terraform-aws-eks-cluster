@@ -14,7 +14,8 @@
 # https://github.com/aws/eks-charts/tree/master/stable/aws-vpc-cni#adopting-the-existing-aws-node-resources-in-an-eks-cluster
 resource "null_resource" "remove_aws_vpc_cni_plugin" {
   provisioner "local-exec" {
-    command     = format("%s/remove-aws-vpc-cni-plugin.sh", path.module)
+    command = format("%s/remove-aws-vpc-cni-plugin.sh", path.module)
+
     environment = {
       CLUSTER_ENDPOINT = data.aws_eks_cluster.cluster.endpoint
       CLUSTER_CA       = data.aws_eks_cluster.cluster.certificate_authority.0.data

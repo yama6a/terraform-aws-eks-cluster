@@ -24,13 +24,14 @@ module "rds_postgres" {
   username               = "dbuser"
   create_random_password = true
 
-  db_subnet_group_name   = var.db_subnet_group_name
+  db_subnet_group_name = var.db_subnet_group_name
+
   vpc_security_group_ids = [
     module.security_group.security_group_id
   ]
 
-  maintenance_window              = "Mon:00:00-Mon:01:00"
-  create_cloudwatch_log_group     = true
+  maintenance_window          = "Mon:00:00-Mon:01:00"
+  create_cloudwatch_log_group = true
   enabled_cloudwatch_logs_exports = [
     "postgresql",
     "upgrade"
@@ -61,7 +62,7 @@ module "rds_postgres" {
     }
   ]
 
-  db_option_group_tags    = {
+  db_option_group_tags = {
     # redact passwords and such from logs
     "Sensitive" = "low"
   }
@@ -98,20 +99,20 @@ resource "aws_iam_policy" "rds_iam_policy" {
 
   policy = jsonencode({
     Version = "2012-10-17"
-    Statement: [
+    Statement : [
       {
         // allow SA connect to DBs via IAM authentication
         // (doesn't quite work yet. With root credentials it works, with SA credentials generated token is not valid...)
-        Effect   = "Allow"
-        Action   = [
+        Effect = "Allow"
+        Action = [
           "rds-db:connect",
         ],
         Resource = "${module.rds_postgres.db_instance_arn}/${module.rds_postgres.db_instance_username}"
       },
       {
         // allow SA to retrieve the db password from aws secrets manager
-        Effect   = "Allow"
-        Action   = [
+        Effect = "Allow"
+        Action = [
           "secretsmanager:GetResourcePolicy",
           "secretsmanager:GetSecretValue",
           "secretsmanager:DescribeSecret",

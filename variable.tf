@@ -19,7 +19,7 @@ variable "aws_region" {
   description = "AWS region"
 }
 
-variable tags {
+variable "tags" {
   type        = map(string)
   default     = {}
   description = "Map of tags to be attached to all AWS resources"
@@ -31,18 +31,18 @@ variable "domains" {
   description = "Map of {domain => [set(subject_alternative_names)]} to be hosted on the cluster which automatically receive ACM certificates. (For an example, see example.tfvars). ALL TLDs MUST HAVE AN EXISTING HOSTED ZONE IN Route53!"
 }
 
-variable services {
-  default     = {}
-  type        = map(object({
+variable "services" {
+  default = {}
+  type = map(object({
     create_ecr_repo        = bool
     enable_dynamodb_access = bool
-    postgres_dbs           = list(object({
+    postgres_dbs = list(object({
       # Name of the database instance (suffixed to the service-name)
-      db_name             = string
+      db_name = string
       # Instance class of the database (e.g. db.t4g.micro)
-      instance_class      = string
+      instance_class = string
       # Whether to deploy the database in multiple availability zones
-      multi_az            = bool
+      multi_az = bool
       # Enable Deletion Protection (should always be true! To delete a DB, set to false, then apply, then remove object, then apply again)
       deletion_protection = bool
     }))

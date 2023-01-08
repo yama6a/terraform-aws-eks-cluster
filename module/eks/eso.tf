@@ -37,7 +37,7 @@ module "external_secrets_helm" {
   argo_helm_enabled = false
 
   // enables 2 pods on separate nodes for fault tolerance purposes.
-  values = var.high_availability ?  yamlencode(local.values) : ""
+  values = var.high_availability ? yamlencode(local.values) : ""
 
   helm_timeout = 240
   helm_wait    = true

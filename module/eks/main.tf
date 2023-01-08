@@ -3,7 +3,7 @@ resource "aws_kms_key" "eks_secrets_key" {
   customer_master_key_spec = "SYMMETRIC_DEFAULT"
   description              = "Key for EKS Cluster Secrets Encryption"
   enable_key_rotation      = true
-  tags = var.tags
+  tags                     = var.tags
 }
 
 locals {
@@ -25,7 +25,8 @@ module "eks" {
 
   # eks cluster settings
   cluster_enabled_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
-  cluster_addons            = {
+
+  cluster_addons = {
     coredns    = {}
     kube-proxy = {}
     # vpc-cni  = {} # do not install vpc-cni explicitly. It will be installed implicitly, but then replaced by vcni.tf

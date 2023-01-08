@@ -1,6 +1,6 @@
 variable "cluster_id" {
-    description = "ID of the EKS cluster"
-    type        = string
+  description = "ID of the EKS cluster"
+  type        = string
 }
 
 variable "tags" {

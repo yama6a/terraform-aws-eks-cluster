@@ -14,6 +14,6 @@ output "postgres_db_password_asm_secret_arn" {
 }
 
 output "rds_postgres_host" {
-    description = "The RDS PostGres host"
-    value       = module.rds_postgres.db_instance_address
+  description = "The RDS PostGres host"
+  value       = module.rds_postgres.db_instance_address
 }

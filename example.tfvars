@@ -2,7 +2,8 @@ project_name      = "sandbox"
 env               = "staging"
 high_availability = false
 aws_region        = "eu-west-1"
-domains           = {
+
+domains = {
   "example.com" = [
     "*.example.com"
   ],
@@ -12,7 +13,8 @@ domains           = {
     "www.example.edu"
   ],
 }
-tags              = {
+
+tags = {
   terraformSource = "https://github.com/ymakhloufi/terraform-aws-eks-cluster"
 }
 
@@ -20,7 +22,8 @@ services = {
   "my-awesome-service" = {
     create_ecr_repo        = true
     enable_dynamodb_access = true
-    postgres_dbs           = [
+
+    postgres_dbs = [
       {
         "db_name"             = "db-name-1"
         "instance_class"      = "db.t4g.micro",
