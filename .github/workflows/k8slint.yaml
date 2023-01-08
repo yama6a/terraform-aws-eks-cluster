@@ -1,0 +1,14 @@
+name: terraform-lint
+
+on: [ push, pull_request ]
+
+jobs:
+  k8s-lint:
+    name: Lint Kubernetes Manifests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@main
+      - uses: damfle/github-action-kubelinter@v1.0.0
+        with:
+          file_or_dir: ./k8s
