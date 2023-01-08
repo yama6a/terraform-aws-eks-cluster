@@ -1,0 +1,7 @@
+checks:
+  addAllBuiltIn: false
+  exclude:
+    - "unset-cpu-requirements"
+    - "unset-memory-requirements"
+  ignorePaths:
+    - k8s/sample-app.yaml
