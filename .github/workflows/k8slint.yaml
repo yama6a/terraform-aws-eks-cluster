@@ -9,6 +9,8 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@main
-      - uses: damfle/github-action-kubelinter@v1.0.0
+      - name: Run k8s-lint
+        uses: azure/k8s-lint@v1
         with:
-          file_or_dir: ./k8s
+          manifests: |
+            k8s/*.yaml
