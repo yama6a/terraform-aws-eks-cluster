@@ -8,12 +8,12 @@ output "iam_policy_arn" {
   value       = aws_iam_policy.rds_iam_policy.arn
 }
 
-output "postgres_db_password_asm_secret_arn" {
+output "password_asm_secret_arn" {
   description = "The ARN for the secret holding the PostGres RDS password in AWS Secret Manager"
   value       = aws_secretsmanager_secret.password.arn
 }
 
-output "rds_postgres_host" {
+output "host" {
   description = "The RDS PostGres host"
   value       = module.rds_postgres.db_instance_address
 }

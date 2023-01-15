@@ -20,6 +20,7 @@ resource "kubernetes_service_account" "sa" {
 
 module "irsa" {
   source = "registry.terraform.io/Young-ook/eks/aws//modules/iam-role-for-serviceaccount"
+  version = "1.7.11"
 
   name           = "${var.service_name}-irsa"
   tags           = var.tags
