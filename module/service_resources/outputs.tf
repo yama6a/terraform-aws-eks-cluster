@@ -22,3 +22,13 @@ output "rds_mysql_hosts" {
   description = "Created RDS MySQL Hosts"
   value       = module.mysql[*].host
 }
+
+output "asm_mariadb_db_password_arns" {
+  description = "Created ASM MariaDB DB Password ARNs"
+  value       = module.mariadb[*].password_asm_secret_arn
+}
+
+output "rds_mariadb_hosts" {
+  description = "Created RDS MariaDB Hosts"
+  value       = module.mariadb[*].host
+}

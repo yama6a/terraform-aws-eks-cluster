@@ -52,5 +52,20 @@ services = {
         "deletion_protection" = false,
       },
     ],
+
+    mariadb_dbs = [
+      {
+        "db_name"             = "mariadb-db-name-1"
+        "instance_class"      = "db.t4g.micro",
+        "multi_az"            = false,
+        "deletion_protection" = false,
+      },
+      {
+        "db_name"             = "mariadb-db-name-2"
+        "instance_class"      = "db.t4g.micro",
+        "multi_az"            = false,
+        "deletion_protection" = false,
+      },
+    ],
   },
 }

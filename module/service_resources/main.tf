@@ -52,6 +52,22 @@ module "mysql" {
   deletion_protection = var.mysql_databases[count.index].deletion_protection
 }
 
+module "mariadb" {
+  source = "./module/rds_mariadb"
+  count  = length(var.mariadb_databases)
+
+  tags                      = local.tags
+  cluster_security_group_id = var.db_security_group_id
+  vpc_id                    = var.vpc_id
+  db_subnet_group_name      = var.vpc_subnet_group_name
+
+  service_name        = var.service_name
+  instance_name       = var.mariadb_databases[count.index].db_name
+  instance_class      = var.mariadb_databases[count.index].instance_class
+  multi_az            = var.mariadb_databases[count.index].multi_az
+  deletion_protection = var.mariadb_databases[count.index].deletion_protection
+}
+
 module "irsa" {
   source = "./module/irsa"
 
@@ -60,5 +76,5 @@ module "irsa" {
   cluster_id   = var.cluster_id
   oidc_arn     = var.oidc_arn
   oidc_url     = var.oidc_url
-  policy_arns  = concat(module.postgres[*].iam_policy_arn, module.dynamodb[*].policy_arn, module.mysql[*].iam_policy_arn)
+  policy_arns  = concat(module.postgres[*].iam_policy_arn, module.dynamodb[*].policy_arn, module.mysql[*].iam_policy_arn, module.mariadb[*].iam_policy_arn)
 }
