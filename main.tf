@@ -58,6 +58,7 @@ module "service_resources" {
   create_ecr_repo        = each.value.create_ecr_repo
   postgres_databases     = each.value.postgres_dbs
   mysql_databases        = each.value.mysql_dbs
+  mariadb_databases      = each.value.mariadb_dbs
 }
 
 data "aws_eks_cluster" "cluster" {
