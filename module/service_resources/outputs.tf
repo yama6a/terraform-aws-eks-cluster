@@ -4,11 +4,21 @@ output "ecr_repository_url" {
 }
 
 output "asm_postgres_db_password_arns" {
-  description = "Created ASM Postgres DB Password ARN"
-  value       = module.postgres[*].postgres_db_password_asm_secret_arn
+  description = "Created ASM Postgres DB Password ARNs"
+  value       = module.postgres[*].password_asm_secret_arn
 }
 
 output "rds_postgres_hosts" {
   description = "Created RDS Postgres Hosts"
-  value       = module.postgres[*].rds_postgres_host
+  value       = module.postgres[*].host
+}
+
+output "asm_mysql_db_password_arns" {
+  description = "Created ASM MySQL DB Password ARNs"
+  value       = module.mysql[*].password_asm_secret_arn
+}
+
+output "rds_mysql_hosts" {
+  description = "Created RDS MySQL Hosts"
+  value       = module.mysql[*].host
 }

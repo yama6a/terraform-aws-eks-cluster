@@ -40,3 +40,15 @@ output "postgres_hosts" {
     for service in module.service_resources : service.rds_postgres_hosts
   ]
 }
+
+output "mysql_password_secret_ARNs" {
+  value = [
+    for service in module.service_resources : service.asm_mysql_db_password_arns
+  ]
+}
+
+output "mysql_hosts" {
+  value = [
+    for service in module.service_resources : service.rds_mysql_hosts
+  ]
+}

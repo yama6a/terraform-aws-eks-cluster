@@ -57,6 +57,7 @@ module "service_resources" {
   enable_dynamodb_access = each.value.enable_dynamodb_access
   create_ecr_repo        = each.value.create_ecr_repo
   postgres_databases     = each.value.postgres_dbs
+  mysql_databases        = each.value.mysql_dbs
 }
 
 data "aws_eks_cluster" "cluster" {
