@@ -28,6 +28,21 @@ variable "postgres_databases" {
   description = "List of postgres databases."
 }
 
+variable "mysql_databases" {
+  type = list(object({
+    # Name of the database instance (suffixed to the service-name)
+    db_name = string
+    # Instance class of the database (e.g. db.t4g.micro)
+    instance_class = string
+    # Whether to deploy the database in multiple availability zones
+    multi_az = bool
+    # Enable Deletion Protection (should always be true! To delete a DB, set to false, then apply, then remove object, then apply again)
+    deletion_protection = bool
+  }))
+  default     = []
+  description = "List of mysql databases."
+}
+
 variable "tags" {
   type        = map(string)
   default     = {}

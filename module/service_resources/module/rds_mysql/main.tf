@@ -1,17 +1,22 @@
 data "aws_caller_identity" "current" {}
 
-module "rds_postgres" {
+locals {
+  // only instances >= medium (medium, large, 2xlarge ...) support performance insights for MySQL
+  enable_performance_insights = length(regexall(".*(medium|large)$", terraform.workspace)) > 0
+}
+
+module "rds_mysql" {
   source = "registry.terraform.io/terraform-aws-modules/rds/aws"
 
   identifier = "${var.service_name}-${var.instance_name}"
   db_name    = replace(var.instance_name, "-", "_")
   tags       = var.tags
 
-  engine                              = "postgres"
-  engine_version                      = "14.5"
-  family                              = "postgres14"
-  major_engine_version                = "14"
-  port                                = 5432
+  engine                              = "mysql"
+  engine_version                      = "8.0"
+  family                              = "mysql8.0"
+  major_engine_version                = "8.0"
+  port                                = 3306
   iam_database_authentication_enabled = true
 
 
@@ -34,8 +39,8 @@ module "rds_postgres" {
   create_cloudwatch_log_group = true
 
   enabled_cloudwatch_logs_exports = [
-    "postgresql",
-    "upgrade"
+    "general",
+    "slowquery"
   ]
 
   backup_window           = "01:00-02:00"
@@ -43,7 +48,7 @@ module "rds_postgres" {
   skip_final_snapshot     = false
   deletion_protection     = var.deletion_protection
 
-  performance_insights_enabled          = true
+  performance_insights_enabled          = local.enable_performance_insights
   performance_insights_retention_period = 7
   create_monitoring_role                = true
   monitoring_interval                   = 60
@@ -53,23 +58,29 @@ module "rds_postgres" {
 
   parameters = [
     {
-      # kindof like a garbage collector for postgres: https://www.postgresql.org/docs/current/sql-vacuum.html
-      name  = "autovacuum"
-      value = 1
+      name  = "character_set_client"
+      value = "utf8mb4"
     },
     {
-      name  = "client_encoding"
-      value = "utf8"
+      name  = "character_set_server"
+      value = "utf8mb4"
     }
   ]
 
+  db_instance_tags = {
+    "Sensitive" = "high"
+  }
+
   db_option_group_tags = {
-    # redact passwords and such from logs
     "Sensitive" = "low"
   }
+
   db_parameter_group_tags = {
-    # redact passwords and such from logs
     "Sensitive" = "low"
+  }
+
+  db_subnet_group_tags = {
+    "Sensitive" = "high"
   }
 }
 
@@ -80,14 +91,14 @@ module "security_group" {
 
   name        = "rds-${var.instance_name}"
   tags        = var.tags
-  description = "Complete PostgreSQL example security group"
+  description = "MySQL DB security group"
   vpc_id      = var.vpc_id
 
   ingress_with_source_security_group_id = [
     {
-      rule                     = "postgresql-tcp"
+      rule                     = "mysql-tcp"
       source_security_group_id = var.cluster_security_group_id
-      description              = "Allow Postgres TCP Traffic via Ingress Rule from EKS Cluster Nodes"
+      description              = "Allow MySQL TCP Traffic via Ingress Rule from EKS Cluster Nodes"
     },
   ]
 }
@@ -104,7 +115,7 @@ resource "aws_iam_policy" "rds_iam_policy" {
       {
         // allow SA connect to DBs via IAM authentication
         // (doesn't quite work yet. With root credentials it works, with SA credentials generated token is not valid...)
-        Resource = "${module.rds_postgres.db_instance_arn}/${module.rds_postgres.db_instance_username}"
+        Resource = "${module.rds_mysql.db_instance_arn}/${module.rds_mysql.db_instance_username}"
         Effect   = "Allow"
 
         Action = [
@@ -143,5 +154,5 @@ resource "aws_secretsmanager_secret" "password" {
 
 resource "aws_secretsmanager_secret_version" "password" {
   secret_id     = aws_secretsmanager_secret.password.id
-  secret_string = module.rds_postgres.db_instance_password
+  secret_string = module.rds_mysql.db_instance_password
 }

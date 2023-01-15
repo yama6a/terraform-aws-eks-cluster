@@ -25,13 +25,28 @@ services = {
 
     postgres_dbs = [
       {
-        "db_name"             = "db-name-1"
+        "db_name"             = "pg-db-name-1"
         "instance_class"      = "db.t4g.micro",
         "multi_az"            = false,
         "deletion_protection" = false,
       },
       {
-        "db_name"             = "db-name-2"
+        "db_name"             = "pg-db-name-2"
+        "instance_class"      = "db.t4g.micro",
+        "multi_az"            = false,
+        "deletion_protection" = false,
+      },
+    ],
+
+    mysql_dbs = [
+      {
+        "db_name"             = "mysql-db-name-1"
+        "instance_class"      = "db.t4g.micro",
+        "multi_az"            = false,
+        "deletion_protection" = false,
+      },
+      {
+        "db_name"             = "mqsql-db-name-2"
         "instance_class"      = "db.t4g.micro",
         "multi_az"            = false,
         "deletion_protection" = false,
