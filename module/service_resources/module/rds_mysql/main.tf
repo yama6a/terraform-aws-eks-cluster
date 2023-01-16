@@ -43,9 +43,11 @@ module "rds_mysql" {
     "slowquery"
   ]
 
+
+  // if we don't skip the final snapshot, terraform will fail to destroy the option group until we manually delete the final snapshot
+  skip_final_snapshot     = true
   backup_window           = "01:00-02:00"
   backup_retention_period = 30
-  skip_final_snapshot     = false
   deletion_protection     = var.deletion_protection
 
   performance_insights_enabled          = local.enable_performance_insights

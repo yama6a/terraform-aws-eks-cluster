@@ -52,3 +52,15 @@ output "mysql_hosts" {
     for service in module.service_resources : service.rds_mysql_hosts
   ]
 }
+
+output "mariadb_password_secret_ARNs" {
+  value = [
+    for service in module.service_resources : service.asm_mariadb_db_password_arns
+  ]
+}
+
+output "mariadb_hosts" {
+  value = [
+    for service in module.service_resources : service.rds_mariadb_hosts
+  ]
+}
