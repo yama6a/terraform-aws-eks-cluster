@@ -68,6 +68,18 @@ module "mariadb" {
   deletion_protection = var.mariadb_databases[count.index].deletion_protection
 }
 
+module "eventbridge" {
+  source = "./module/eventbridge"
+  count  = length(var.eventbuses)
+
+  aws_region                = var.aws_region
+  tags                      = local.tags
+  service_name              = var.service_name
+  event_bus_name            = var.eventbuses[count.index].name
+  cloudwatch_retention_days = var.eventbuses[count.index].cloudwatch_retention_days
+  s3_history_storage        = var.eventbuses[count.index].s3_history_storage
+}
+
 module "irsa" {
   source = "./module/irsa"
 

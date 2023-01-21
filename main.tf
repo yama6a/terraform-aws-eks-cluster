@@ -51,6 +51,7 @@ module "service_resources" {
   oidc_url              = module.eks.oidc_url
   oidc_arn              = module.eks.oidc_arn
   cluster_id            = module.eks.cluster_id
+  aws_region            = var.aws_region
 
   // service specific
   service_name           = each.key
@@ -59,6 +60,7 @@ module "service_resources" {
   postgres_databases     = each.value.postgres_dbs
   mysql_databases        = each.value.mysql_dbs
   mariadb_databases      = each.value.mariadb_dbs
+  eventbuses             = each.value.eventbuses
 }
 
 data "aws_eks_cluster" "cluster" {

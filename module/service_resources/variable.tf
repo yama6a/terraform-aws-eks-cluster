@@ -58,6 +58,22 @@ variable "mariadb_databases" {
   description = "List of mariadb databases."
 }
 
+variable "eventbuses" {
+  type = list(object({
+    name                      = string
+    cloudwatch_retention_days = number
+    s3_history_storage        = bool
+  }))
+
+  default     = []
+  description = "List of eventbusses."
+}
+
+variable "aws_region" {
+  description = "AWS region"
+  type        = string
+}
+
 variable "tags" {
   type        = map(string)
   default     = {}
