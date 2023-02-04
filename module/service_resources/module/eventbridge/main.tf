@@ -5,7 +5,7 @@ module "eventbridge" {
   tags     = var.tags
 
   rules = {
-    "${var.event_bus_name}" = {
+    "${var.event_bus_name}-catchall" = {
       description = "Capture all ${var.event_bus_name} data"
       enabled     = true
 
@@ -18,7 +18,7 @@ module "eventbridge" {
   }
 
   targets = {
-    "${var.event_bus_name}" = [
+    "${var.event_bus_name}-catchall" = [
       {
         name = "cloudwatch-catchall"
         arn  = aws_cloudwatch_log_group.cloudwatch_log_group.arn
