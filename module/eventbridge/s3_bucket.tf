@@ -6,29 +6,29 @@ resource "aws_kms_alias" "s3_event_archive_encryption_key_alias" {
 }
 
 resource "aws_kms_key" "s3_event_archive_encryption_key" {
+  tags                     = var.tags
   key_usage                = "ENCRYPT_DECRYPT"
   customer_master_key_spec = "SYMMETRIC_DEFAULT"
   description              = "Key for S3 Event Archive encryption"
   enable_key_rotation      = true
   deletion_window_in_days  = 7
-  //  tags                     = var.tags // Todo
   policy                   = jsonencode({
     Version = "2012-10-17"
     Statement : [
       {
-        "Sid": "Enable IAM User Permissions",
-        "Effect": "Allow",
-        "Principal": {
-          "AWS": "arn:aws:iam::${data.aws_caller_identity.current_account.account_id}:root"
+        "Sid" : "Enable IAM User Permissions",
+        "Effect" : "Allow",
+        "Principal" : {
+          "AWS" : "arn:aws:iam::${data.aws_caller_identity.current_account.account_id}:root"
         },
-        "Action": "kms:*",
-        "Resource": "*"
+        "Action" : "kms:*",
+        "Resource" : "*"
       },
       {
-        "Sid": "Allow use of the key",
+        "Sid" : "Allow use of the key",
         Effect = "Allow"
-        "Principal": {
-          "AWS": aws_iam_role.firehose_role.arn
+        "Principal" : {
+          "AWS" : aws_iam_role.firehose_role.arn
         },
         Action = [
           "kms:Encrypt",
@@ -37,19 +37,19 @@ resource "aws_kms_key" "s3_event_archive_encryption_key" {
           "kms:GenerateDataKey*",
           "kms:DescribeKey"
         ],
-        "Resource": "*"
+        "Resource" : "*"
       }
     ]
   })
 }
 
 resource "aws_s3_bucket" "event_archive" {
-  bucket        = "eventbridge-events-archive"
-  //  tags   = var.tags // todo
+  bucket        = "${replace(var.project_name, "_", "-")}-event-archive"
+  tags          = var.tags
   force_destroy = true
 }
 
-resource aws_s3_bucket_lifecycle_configuration "infrequent_access" {
+resource "aws_s3_bucket_lifecycle_configuration" "infrequent_access" {
   bucket = aws_s3_bucket.event_archive.id
 
   rule {
@@ -80,11 +80,3 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "bucket_encryption
     }
   }
 }
-
-# 1. Create Firehose Delivery Stream
-# 2. Create Policy for KMS key:
-
-
-
-# 3. Create EventBridge Rule for Firehose to store in S3
-# 4. Probably fight with roles and IAM policies for a while

@@ -66,14 +66,8 @@ variable "services" {
       # Enable Deletion Protection (should always be true! To delete a DB, set to false, then apply, then remove object, then apply again)
       deletion_protection = bool
     }))
-    eventbuses = list(object({
-      # Name of the eventbus (suffixed to the service-name)
-      name = string
-      # number of days to keep messages in CloudWatch
-      cloudwatch_retention_days = number
-      # Whether or not to keep an indefinite archive of all events in S3
-      s3_history_storage        = bool
-    }))
+    # whether or not this service will publish events
+    publishes_events = bool
   }))
   description = "Map of services in teh EKS cluster to be given access to aws resources. (For an example, see example.tfvars)"
 }

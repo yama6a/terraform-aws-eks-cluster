@@ -58,15 +58,10 @@ variable "mariadb_databases" {
   description = "List of mariadb databases."
 }
 
-variable "eventbuses" {
-  type = list(object({
-    name                      = string
-    cloudwatch_retention_days = number
-    s3_history_storage        = bool
-  }))
-
-  default     = []
-  description = "List of eventbusses."
+variable "eventbus" {
+  type        = bool
+  default     = false
+  description = "Whether or not this service will publish events (creates an event bus for the service)"
 }
 
 variable "aws_region" {
@@ -107,5 +102,15 @@ variable "oidc_arn" {
 
 variable "cluster_id" {
   description = "ID of the EKS cluster"
+  type        = string
+}
+
+variable "firehose_s3_archive_stream_arn" {
+  description = "The ARN of the Kinesis Firehose stream which pipes into s3 to which all events are archived"
+  type        = string
+}
+
+variable "event_bridge_firehose_s3_invocation_role_arn" {
+  description = "The ARN of the IAM role which is used to invoke the Kinesis Firehose stream which pipes into s3 to which all events are archived"
   type        = string
 }

@@ -1,23 +1,21 @@
 variable "event_bus_name" {
+  description = "The name of the event bus for which resources are to be created"
   type        = string
-  description = "The name of the event bus to create."
 }
 
-variable "service_name" {
+variable "aws_region" {
+  description = "AWS region"
   type        = string
-  description = "The name of the service to create."
 }
 
-variable "cloudwatch_retention_days" {
-  type        = number
-  default     = 30
-  description = "The number of days to retain events in CloudWatch for this event bus."
+variable "firehose_s3_archive_stream_arn" {
+  description = "The ARN of the Kinesis Firehose stream which pipes into s3 to which all events are archived"
+  type        = string
 }
 
-variable "s3_history_storage" {
+variable "event_bridge_firehose_s3_catchall_invocation_role_arn" {
+  description = "The ARN of the IAM role which is used to invoke the Kinesis Firehose stream which pipes into s3 to which all events are archived"
   type        = string
-  default     = "true"
-  description = "Whether to enable history storage in Amazon S3 for this event bus."
 }
 
 variable "tags" {
@@ -26,7 +24,3 @@ variable "tags" {
   description = "Map of tags to be attached to all AWS resources"
 }
 
-variable "aws_region" {
-  type        = string
-  description = "AWS region to use for resources"
-}

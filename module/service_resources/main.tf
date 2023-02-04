@@ -70,14 +70,14 @@ module "mariadb" {
 
 module "eventbridge" {
   source = "./module/eventbridge"
-  count  = length(var.eventbuses)
+  count  = var.eventbus ? 1 : 0
 
-  aws_region                = var.aws_region
-  tags                      = local.tags
-  service_name              = var.service_name
-  event_bus_name            = var.eventbuses[count.index].name
-  cloudwatch_retention_days = var.eventbuses[count.index].cloudwatch_retention_days
-  s3_history_storage        = var.eventbuses[count.index].s3_history_storage
+  aws_region     = var.aws_region
+  tags           = local.tags
+  event_bus_name = var.service_name
+
+  firehose_s3_archive_stream_arn                        = var.firehose_s3_archive_stream_arn
+  event_bridge_firehose_s3_catchall_invocation_role_arn = var.event_bridge_firehose_s3_invocation_role_arn
 }
 
 module "irsa" {

@@ -1,14 +1,20 @@
 data "aws_caller_identity" "current" {}
 
 locals {
-  cw_log_group_name = "/aws/events/${var.service_name}/${var.event_bus_name}-catchall"
+  cw_log_group_name = "/aws/events/${var.event_bus_name}-catchall"
+  region = var.aws_region
 }
 
 resource "aws_cloudwatch_log_group" "cloudwatch_log_group" {
   name              = local.cw_log_group_name
-  retention_in_days = var.cloudwatch_retention_days
+  retention_in_days = 30
   kms_key_id        = aws_kms_key.cloudwatch_events_encryption_key.arn
   tags              = var.tags
+}
+
+resource "aws_kms_alias" "cloudwatch_events_encryption_key_alias" {
+  name          = "alias/cloudwatch_events_encryption_key"
+  target_key_id = aws_kms_key.cloudwatch_events_encryption_key.key_id
 }
 
 resource "aws_kms_key" "cloudwatch_events_encryption_key" {

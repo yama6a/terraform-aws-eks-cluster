@@ -39,6 +39,13 @@ module "acm" {
   subject_alternative_names = each.value
 }
 
+module "eventbridge" {
+  source = "./module/eventbridge"
+
+  tags         = local.tags
+  project_name = var.project_name
+}
+
 module "service_resources" {
   source   = "./module/service_resources"
   for_each = var.services
@@ -53,6 +60,9 @@ module "service_resources" {
   cluster_id            = module.eks.cluster_id
   aws_region            = var.aws_region
 
+  firehose_s3_archive_stream_arn               = module.eventbridge.s3_firehose_stream_arn
+  event_bridge_firehose_s3_invocation_role_arn = module.eventbridge.event_bridge_firehose_s3_invocation_role_arn
+
   // service specific
   service_name           = each.key
   enable_dynamodb_access = each.value.enable_dynamodb_access
@@ -60,7 +70,7 @@ module "service_resources" {
   postgres_databases     = each.value.postgres_dbs
   mysql_databases        = each.value.mysql_dbs
   mariadb_databases      = each.value.mariadb_dbs
-  eventbuses             = each.value.eventbuses
+  eventbus               = each.value.publishes_events
 }
 
 data "aws_eks_cluster" "cluster" {

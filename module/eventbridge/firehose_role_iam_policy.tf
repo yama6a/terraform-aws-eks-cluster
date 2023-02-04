@@ -2,8 +2,8 @@ data "aws_caller_identity" "current" {}
 
 data "aws_iam_policy_document" "firehose_inline_policy" {
   statement {
-    sid       = ""
-    actions   = [
+    sid = ""
+    actions = [
       "glue:GetTable",
       "glue:GetTableVersions",
       "glue:GetTableVersions"
@@ -16,41 +16,41 @@ data "aws_iam_policy_document" "firehose_inline_policy" {
   }
 
   statement {
-    sid       = ""
-    actions   = [
+    sid = ""
+    actions = [
       "kafka:GetBootstrapBrokers",
       "kafka:DescribeCluster",
       "kafka:DescribeClusterV2",
       "kafka-cluster:Connect"
     ]
     resources = [
-      "arn:aws:kafka:eu-west-1:${data.aws_caller_identity.current.account_id}:cluster/%FIREHOSE_POLICY_TEMPLATE_PLACEHOLDER%/%FIREHOSE_POLICY_TEMPLATE_PLACEHOLDER%"]
+    "arn:aws:kafka:eu-west-1:${data.aws_caller_identity.current.account_id}:cluster/%FIREHOSE_POLICY_TEMPLATE_PLACEHOLDER%/%FIREHOSE_POLICY_TEMPLATE_PLACEHOLDER%"]
   }
 
   statement {
-    sid       = ""
-    actions   = [
+    sid = ""
+    actions = [
       "kafka-cluster:DescribeTopic",
       "kafka-cluster:DescribeTopicDynamicConfiguration",
       "kafka-cluster:ReadData"
     ]
     resources = [
-      "arn:aws:kafka:eu-west-1:${data.aws_caller_identity.current.account_id}:topic/%FIREHOSE_POLICY_TEMPLATE_PLACEHOLDER%/%FIREHOSE_POLICY_TEMPLATE_PLACEHOLDER%/%FIREHOSE_POLICY_TEMPLATE_PLACEHOLDER%"]
+    "arn:aws:kafka:eu-west-1:${data.aws_caller_identity.current.account_id}:topic/%FIREHOSE_POLICY_TEMPLATE_PLACEHOLDER%/%FIREHOSE_POLICY_TEMPLATE_PLACEHOLDER%/%FIREHOSE_POLICY_TEMPLATE_PLACEHOLDER%"]
   }
 
   statement {
-    sid       = ""
-    actions   = [
+    sid = ""
+    actions = [
       "kafka-cluster:DescribeGroup"
     ]
     resources = [
-      "arn:aws:kafka:eu-west-1:${data.aws_caller_identity.current.account_id}:group/%FIREHOSE_POLICY_TEMPLATE_PLACEHOLDER%/%FIREHOSE_POLICY_TEMPLATE_PLACEHOLDER%/*"]
+    "arn:aws:kafka:eu-west-1:${data.aws_caller_identity.current.account_id}:group/%FIREHOSE_POLICY_TEMPLATE_PLACEHOLDER%/%FIREHOSE_POLICY_TEMPLATE_PLACEHOLDER%/*"]
   }
 
 
   statement {
-    sid       = ""
-    actions   = [
+    sid = ""
+    actions = [
       "glue:GetSchemaByDefinition"
     ]
     resources = [
@@ -61,8 +61,8 @@ data "aws_iam_policy_document" "firehose_inline_policy" {
 
 
   statement {
-    sid       = ""
-    actions   = [
+    sid = ""
+    actions = [
       "glue:GetSchemaVersion"
     ]
     resources = [
@@ -72,8 +72,8 @@ data "aws_iam_policy_document" "firehose_inline_policy" {
 
 
   statement {
-    sid       = ""
-    actions   = [
+    sid = ""
+    actions = [
       "s3:AbortMultipartUpload",
       "s3:GetBucketLocation",
       "s3:GetObject",
@@ -89,17 +89,17 @@ data "aws_iam_policy_document" "firehose_inline_policy" {
 
 
   statement {
-    actions   = [
+    actions = [
       "lambda:InvokeFunction",
       "lambda:GetFunctionConfiguration"
     ]
     resources = [
-      "arn:aws:lambda:eu-west-1:${data.aws_caller_identity.current.account_id}:function:%FIREHOSE_POLICY_TEMPLATE_PLACEHOLDER%"]
+    "arn:aws:lambda:eu-west-1:${data.aws_caller_identity.current.account_id}:function:%FIREHOSE_POLICY_TEMPLATE_PLACEHOLDER%"]
   }
 
 
   statement {
-    actions   = [
+    actions = [
       "kms:GenerateDataKey",
       "kms:Decrypt"
     ]
@@ -109,14 +109,14 @@ data "aws_iam_policy_document" "firehose_inline_policy" {
     condition {
       test     = "StringEquals"
       variable = "kms:ViaService"
-      values   = [
+      values = [
         "s3.eu-west-1.amazonaws.com"
       ]
     }
     condition {
       test     = "StringLike"
       variable = "kms:EncryptionContext:aws:s3:arn"
-      values   = [
+      values = [
         "arn:aws:s3:::%FIREHOSE_POLICY_TEMPLATE_PLACEHOLDER%/*",
         "arn:aws:s3:::%FIREHOSE_POLICY_TEMPLATE_PLACEHOLDER%"
       ]
@@ -125,8 +125,8 @@ data "aws_iam_policy_document" "firehose_inline_policy" {
 
 
   statement {
-    sid       = ""
-    actions   = [
+    sid = ""
+    actions = [
       "logs:PutLogEvents"
     ]
     resources = [
@@ -137,20 +137,20 @@ data "aws_iam_policy_document" "firehose_inline_policy" {
 
 
   statement {
-    sid       = ""
-    actions   = [
+    sid = ""
+    actions = [
       "kinesis:DescribeStream",
       "kinesis:GetShardIterator",
       "kinesis:GetRecords",
       "kinesis:ListShards"
     ]
     resources = [
-      "arn:aws:kinesis:eu-west-1:${data.aws_caller_identity.current.account_id}:stream/%FIREHOSE_POLICY_TEMPLATE_PLACEHOLDER%"]
+    "arn:aws:kinesis:eu-west-1:${data.aws_caller_identity.current.account_id}:stream/%FIREHOSE_POLICY_TEMPLATE_PLACEHOLDER%"]
   }
 
 
   statement {
-    actions   = [
+    actions = [
       "kms:Decrypt"
     ]
     resources = [
@@ -159,7 +159,7 @@ data "aws_iam_policy_document" "firehose_inline_policy" {
     condition {
       test     = "StringEquals"
       variable = "kms:ViaService"
-      values   = [
+      values = [
         "kinesis.eu-west-1.amazonaws.com"
       ]
     }
@@ -167,7 +167,7 @@ data "aws_iam_policy_document" "firehose_inline_policy" {
     condition {
       test     = "StringLike"
       variable = "kms:EncryptionContext:aws:kinesis:arn"
-      values   = [
+      values = [
         "arn:aws:kinesis:eu-west-1:${data.aws_caller_identity.current.account_id}:stream/%FIREHOSE_POLICY_TEMPLATE_PLACEHOLDER%"
       ]
     }
