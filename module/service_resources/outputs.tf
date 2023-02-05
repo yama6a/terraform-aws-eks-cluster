@@ -32,3 +32,8 @@ output "rds_mariadb_hosts" {
   description = "Created RDS MariaDB Hosts"
   value       = module.mariadb[*].host
 }
+
+output "eventbridge_bus_arn" {
+  description = "Created EventBridge Bus ARN"
+  value       = module.eventbridge[0].event_bus_arn
+}

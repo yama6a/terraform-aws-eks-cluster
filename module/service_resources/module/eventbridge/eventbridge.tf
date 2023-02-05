@@ -33,3 +33,35 @@ module "eventbridge" {
     ]
   }
 }
+
+resource "aws_iam_policy" "eventbridge_policy" {
+  name = "${var.event_bus_name}-eventbus-policy"
+  tags = var.tags
+
+  policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": [
+          "events:DescribeEventBus",
+          "events:PutEvents",
+          "events:DescribeEndpoint"
+        ],
+        "Resource": [
+          "arn:aws:events:eu-west-1:902409284726:event-bus/my-awesome-service",
+          "arn:aws:events:*:902409284726:endpoint/*"
+        ]
+      },
+      {
+        "Sid": "VisualEditor1",
+        "Effect": "Allow",
+        "Action": [
+          "events:ListEndpoints",
+          "events:ListEventBuses"
+        ],
+        "Resource": "*"
+      }
+    ]
+  })
+}
