@@ -76,7 +76,7 @@ module "eventbridge" {
   tags           = local.tags
   event_bus_name = var.service_name
 
-  firehose_s3_archive_stream_arn                        = var.firehose_s3_archive_stream_arn
+  firehose_s3_event_archive_stream_arn                  = var.firehose_s3_event_archive_stream_arn
   event_bridge_firehose_s3_catchall_invocation_role_arn = var.event_bridge_firehose_s3_invocation_role_arn
 }
 

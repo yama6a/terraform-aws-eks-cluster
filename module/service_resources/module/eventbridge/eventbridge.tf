@@ -27,7 +27,7 @@ module "eventbridge" {
       },
       {
         name            = "firehose-to-s3-catchall"
-        arn             = var.firehose_s3_archive_stream_arn
+        arn             = var.firehose_s3_event_archive_stream_arn
         attach_role_arn = var.event_bridge_firehose_s3_catchall_invocation_role_arn
       }
     ]

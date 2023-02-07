@@ -60,7 +60,7 @@ module "service_resources" {
   cluster_id            = module.eks.cluster_id
   aws_region            = var.aws_region
 
-  firehose_s3_archive_stream_arn               = module.eventbridge.s3_firehose_stream_arn
+  firehose_s3_event_archive_stream_arn         = module.eventbridge.s3_firehose_stream_arn
   event_bridge_firehose_s3_invocation_role_arn = module.eventbridge.event_bridge_firehose_s3_invocation_role_arn
 
   // service specific

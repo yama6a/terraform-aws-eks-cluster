@@ -8,7 +8,7 @@ variable "aws_region" {
   type        = string
 }
 
-variable "firehose_s3_archive_stream_arn" {
+variable "firehose_s3_event_archive_stream_arn" {
   description = "The ARN of the Kinesis Firehose stream which pipes into s3 to which all events are archived"
   type        = string
 }
