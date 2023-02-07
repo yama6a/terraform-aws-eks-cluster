@@ -12,7 +12,7 @@ resource "aws_kms_key" "s3_event_archive_encryption_key" {
   description              = "Key for S3 Event Archive encryption"
   enable_key_rotation      = true
   deletion_window_in_days  = 7
-  policy                   = jsonencode({
+  policy = jsonencode({
     Version = "2012-10-17"
     Statement : [
       {

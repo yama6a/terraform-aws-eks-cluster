@@ -3,11 +3,11 @@ resource "aws_iam_policy" "dynamodb_policy" {
   tags = var.tags
 
   policy = jsonencode({
-    Version: "2012-10-17"
-    Statement: [
+    Version : "2012-10-17"
+    Statement : [
       {
-        Effect: "Allow"
-        Action: [
+        Effect : "Allow"
+        Action : [
           "dynamodb:BatchGetItem",
           "dynamodb:BatchWriteItem",
           "dynamodb:UntagResource",
@@ -23,21 +23,21 @@ resource "aws_iam_policy" "dynamodb_policy" {
           "dynamodb:UpdateTable",
           "dynamodb:DescribeTable",
         ],
-        Resource: "arn:aws:dynamodb:*:902409284726:table/${var.service_name}.*"
+        Resource : "arn:aws:dynamodb:*:902409284726:table/${var.service_name}.*"
       },
       {
-        "Effect": "Allow",
-        "Action": "dynamodb:ListTables",
-        "Resource": "*"
+        "Effect" : "Allow",
+        "Action" : "dynamodb:ListTables",
+        "Resource" : "*"
       },
       {
-        Effect: "Allow"
-        Action: [
+        Effect : "Allow"
+        Action : [
           "dynamodb:Scan",
           "dynamodb:Query",
           "dynamodb:GetRecords"
         ],
-        Resource: [
+        Resource : [
           "arn:aws:dynamodb:*:902409284726:table/${var.service_name}.*/index/*",
           "arn:aws:dynamodb:*:902409284726:table/${var.service_name}.*/stream/*"
         ]

@@ -88,11 +88,11 @@ module "irsa" {
   cluster_id   = var.cluster_id
   oidc_arn     = var.oidc_arn
   oidc_url     = var.oidc_url
-  policy_arns  = concat(
-  module.postgres[*].iam_policy_arn,
-  module.dynamodb[*].iam_policy_arn,
-  module.mysql[*].iam_policy_arn,
-  module.mariadb[*].iam_policy_arn,
-  module.eventbridge[*].iam_policy_arn
+  policy_arns = concat(
+    module.postgres[*].iam_policy_arn,
+    module.dynamodb[*].iam_policy_arn,
+    module.mysql[*].iam_policy_arn,
+    module.mariadb[*].iam_policy_arn,
+    module.eventbridge[*].iam_policy_arn
   )
 }

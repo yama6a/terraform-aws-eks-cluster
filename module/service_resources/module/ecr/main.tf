@@ -8,7 +8,7 @@ resource "aws_kms_key" "ecr_encryption_key" {
   customer_master_key_spec = "SYMMETRIC_DEFAULT"
   description              = "Key for ECR Image Encryption"
   enable_key_rotation      = true
-  deletion_window_in_days = 7
+  deletion_window_in_days  = 7
   tags                     = var.tags
 }
 

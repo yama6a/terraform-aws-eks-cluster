@@ -12,7 +12,7 @@ resource "aws_kms_key" "eks_cluster_secrets_key" {
   customer_master_key_spec = "SYMMETRIC_DEFAULT"
   description              = "Key for EKS Cluster Secrets Encryption"
   enable_key_rotation      = true
-  deletion_window_in_days = 7
+  deletion_window_in_days  = 7
   tags                     = var.tags
 }
 

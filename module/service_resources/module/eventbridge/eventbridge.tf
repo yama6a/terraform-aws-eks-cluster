@@ -3,7 +3,7 @@ data "aws_caller_identity" "current_aws_account" {}
 module "eventbridge" {
   source = "registry.terraform.io/terraform-aws-modules/eventbridge/aws"
 
-  bus_name = "${var.event_bus_name}"
+  bus_name = var.event_bus_name
   tags     = var.tags
 
   rules = {
@@ -39,28 +39,28 @@ resource "aws_iam_policy" "eventbridge_policy" {
   tags = var.tags
 
   policy = jsonencode({
-    "Version": "2012-10-17",
-    "Statement": [
+    "Version" : "2012-10-17",
+    "Statement" : [
       {
-        "Effect": "Allow",
-        "Action": [
+        "Effect" : "Allow",
+        "Action" : [
           "events:DescribeEventBus",
           "events:PutEvents",
           "events:DescribeEndpoint"
         ],
-        "Resource": [
+        "Resource" : [
           "arn:aws:events:eu-west-1:902409284726:event-bus/my-awesome-service",
           "arn:aws:events:*:902409284726:endpoint/*"
         ]
       },
       {
-        "Sid": "VisualEditor1",
-        "Effect": "Allow",
-        "Action": [
+        "Sid" : "VisualEditor1",
+        "Effect" : "Allow",
+        "Action" : [
           "events:ListEndpoints",
           "events:ListEventBuses"
         ],
-        "Resource": "*"
+        "Resource" : "*"
       }
     ]
   })

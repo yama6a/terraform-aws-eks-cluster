@@ -23,7 +23,7 @@ resource "aws_iam_role" "firehose_role" {
 }
 
 resource "aws_kinesis_firehose_delivery_stream" "firehose_s3_event_archive" {
-  tags = var.tags
+  tags        = var.tags
   name        = "${var.project_name}_firehose_s3_event_archive"
   destination = "extended_s3"
 
