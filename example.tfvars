@@ -22,6 +22,7 @@ services = {
   "my-awesome-service" = {
     create_ecr_repo        = true
     enable_dynamodb_access = true
+    eventbus               = true
 
     postgres_dbs = [
       {
