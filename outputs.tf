@@ -64,3 +64,9 @@ output "mariadb_hosts" {
     for service in module.service_resources : service.rds_mariadb_hosts
   ]
 }
+
+output "eventbus_ARNs" {
+  value = [
+    for service in module.service_resources : service.eventbridge_bus_arn
+  ]
+}

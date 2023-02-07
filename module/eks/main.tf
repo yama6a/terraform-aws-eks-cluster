@@ -1,13 +1,19 @@
-resource "aws_kms_key" "eks_secrets_key" {
+locals {
+  node_group_name = "${var.cluster_name}-ng1"
+}
+
+resource "aws_kms_alias" "eks_cluster_secrets_key_alias" {
+  name          = "alias/eks_cluster_secrets_key"
+  target_key_id = aws_kms_key.eks_cluster_secrets_key.key_id
+}
+
+resource "aws_kms_key" "eks_cluster_secrets_key" {
   key_usage                = "ENCRYPT_DECRYPT"
   customer_master_key_spec = "SYMMETRIC_DEFAULT"
   description              = "Key for EKS Cluster Secrets Encryption"
   enable_key_rotation      = true
+  deletion_window_in_days  = 7
   tags                     = var.tags
-}
-
-locals {
-  node_group_name = "${var.cluster_name}-ng1"
 }
 
 module "eks" {
@@ -34,7 +40,7 @@ module "eks" {
 
   cluster_encryption_config = [
     {
-      provider_key_arn = aws_kms_key.eks_secrets_key.arn
+      provider_key_arn = aws_kms_key.eks_cluster_secrets_key.arn
       resources        = ["secrets"]
     }
   ]

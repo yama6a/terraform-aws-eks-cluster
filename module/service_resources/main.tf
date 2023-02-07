@@ -68,6 +68,18 @@ module "mariadb" {
   deletion_protection = var.mariadb_databases[count.index].deletion_protection
 }
 
+module "eventbridge" {
+  source = "./module/eventbridge"
+  count  = var.eventbus ? 1 : 0
+
+  aws_region     = var.aws_region
+  tags           = local.tags
+  event_bus_name = var.service_name
+
+  firehose_s3_event_archive_stream_arn                  = var.firehose_s3_event_archive_stream_arn
+  event_bridge_firehose_s3_catchall_invocation_role_arn = var.event_bridge_firehose_s3_invocation_role_arn
+}
+
 module "irsa" {
   source = "./module/irsa"
 
@@ -76,5 +88,11 @@ module "irsa" {
   cluster_id   = var.cluster_id
   oidc_arn     = var.oidc_arn
   oidc_url     = var.oidc_url
-  policy_arns  = concat(module.postgres[*].iam_policy_arn, module.dynamodb[*].policy_arn, module.mysql[*].iam_policy_arn, module.mariadb[*].iam_policy_arn)
+  policy_arns = concat(
+    module.postgres[*].iam_policy_arn,
+    module.dynamodb[*].iam_policy_arn,
+    module.mysql[*].iam_policy_arn,
+    module.mariadb[*].iam_policy_arn,
+    module.eventbridge[*].iam_policy_arn
+  )
 }

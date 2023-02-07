@@ -1,8 +1,14 @@
+resource "aws_kms_alias" "ecr_encryption_key_alias" {
+  name          = "alias/ecr_encryption_key"
+  target_key_id = aws_kms_key.ecr_encryption_key.key_id
+}
+
 resource "aws_kms_key" "ecr_encryption_key" {
   key_usage                = "ENCRYPT_DECRYPT"
   customer_master_key_spec = "SYMMETRIC_DEFAULT"
   description              = "Key for ECR Image Encryption"
   enable_key_rotation      = true
+  deletion_window_in_days  = 7
   tags                     = var.tags
 }
 

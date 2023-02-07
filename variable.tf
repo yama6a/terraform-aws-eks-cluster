@@ -66,6 +66,8 @@ variable "services" {
       # Enable Deletion Protection (should always be true! To delete a DB, set to false, then apply, then remove object, then apply again)
       deletion_protection = bool
     }))
+    # whether or not this service will publish events
+    publishes_events = bool
   }))
   description = "Map of services in teh EKS cluster to be given access to aws resources. (For an example, see example.tfvars)"
 }
