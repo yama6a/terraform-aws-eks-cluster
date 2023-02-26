@@ -1,5 +1,5 @@
 resource "aws_cloudwatch_event_connection" "event_subscriber_connection" {
-  name               = "ngrok-connection"
+  name               = "service-subscription-connection"
   description        = "A connection description"
   authorization_type = "API_KEY"
 

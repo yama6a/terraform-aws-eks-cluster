@@ -46,6 +46,7 @@ module "eventbridge" {
   project_name = var.project_name
 }
 
+// Full example of a service that publishes and subscribes to (its own) events and uses all databases.
 module "my-awesome-service" {
   source                           = "./my-awesome-service"
   service_name                     = "my-awesome-service"
@@ -61,10 +62,12 @@ module "my-awesome-service" {
   aws_region            = var.aws_region
 
   firehose_s3_event_archive_stream_arn         = module.eventbridge.s3_firehose_stream_arn
-  event_subscriber_connection_arn              = module.eventbridge.event_subscriber_connection_arn
   event_bridge_firehose_s3_invocation_role_arn = module.eventbridge.event_bridge_firehose_s3_invocation_role_arn
+  event_subscriber_connection_arn              = module.eventbridge.event_subscriber_connection_arn
   event_subscribers                            = {
-    "CreateAnimalEvent" = module.my-awesome-service.eventbridge_subscription_destination_arn
+    "CreateAnimalEvent" = [
+      module.my-awesome-service.eventbridge_subscription_destination_arn
+    ]
   }
 }
 

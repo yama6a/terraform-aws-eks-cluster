@@ -1,5 +1,17 @@
 data "aws_caller_identity" "current_aws_account" {}
 
+module "targets_with_dlq" {
+  source   = "./module/rule"
+  for_each = var.event_subscribers
+
+  event_bus_name                       = module.eventbridge.eventbridge_bus_name
+  event_subscriber_connection_role_arn = aws_iam_role.event_subscriber_connection_role.arn
+  tags                                 = var.tags
+
+  event_name          = each.key
+  subscriber_dst_arns = each.value
+}
+
 // Event Bus that the current service will publish events on
 module "eventbridge" {
   source = "registry.terraform.io/terraform-aws-modules/eventbridge/aws"
@@ -8,7 +20,7 @@ module "eventbridge" {
   tags     = var.tags
 
   rules = {
-    "${var.event_bus_name}-catchall" = {
+    "catchall" = {
       description = "Capture all ${var.event_bus_name} data"
       enabled     = true
 
@@ -21,7 +33,7 @@ module "eventbridge" {
   }
 
   targets = {
-    "${var.event_bus_name}-catchall" = [
+    "catchall" = [
       {
         name = "cloudwatch-catchall"
         arn  = aws_cloudwatch_log_group.cloudwatch_log_group.arn
@@ -33,36 +45,4 @@ module "eventbridge" {
       }
     ]
   }
-}
-
-resource "aws_iam_policy" "eventbridge_policy" {
-  name = "${var.event_bus_name}-eventbus-policy"
-  tags = var.tags
-
-  policy = jsonencode({
-    "Version" : "2012-10-17",
-    "Statement" : [
-      {
-        "Effect" : "Allow",
-        "Action" : [
-          "events:DescribeEventBus",
-          "events:PutEvents",
-          "events:DescribeEndpoint"
-        ],
-        "Resource" : [
-          "arn:aws:events:eu-west-1:902409284726:event-bus/${var.event_bus_name}",
-          "arn:aws:events:*:902409284726:endpoint/*"
-        ]
-      },
-      {
-        "Sid" : "VisualEditor1",
-        "Effect" : "Allow",
-        "Action" : [
-          "events:ListEndpoints",
-          "events:ListEventBuses"
-        ],
-        "Resource" : "*"
-      }
-    ]
-  })
 }
