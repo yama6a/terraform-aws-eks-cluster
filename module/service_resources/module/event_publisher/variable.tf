@@ -23,4 +23,3 @@ variable "tags" {
   default     = {}
   description = "Map of tags to be attached to all AWS resources"
 }
-

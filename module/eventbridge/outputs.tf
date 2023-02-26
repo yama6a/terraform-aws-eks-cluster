@@ -7,3 +7,8 @@ output "event_bridge_firehose_s3_invocation_role_arn" {
   value       = aws_iam_role.event_bridge_firehose_s3_catchall_invocation_role.arn
   description = "The ARN of the IAM role that is used by Eventbridge to invoke the Kinesis Firehose stream that pipes all events into the s3 event bucket for archival purposes."
 }
+
+output "event_subscriber_connection_arn" {
+  value       = aws_cloudwatch_event_connection.event_subscriber_connection.arn
+  description = "The ARN of the Eventbridge connection that is used to push events to services."
+}

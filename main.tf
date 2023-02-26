@@ -46,11 +46,11 @@ module "eventbridge" {
   project_name = var.project_name
 }
 
-module "service_resources" {
-  source   = "./module/service_resources"
-  for_each = var.services
+module "my-awesome-service" {
+  source                           = "./my-awesome-service"
+  service_name                     = "my-awesome-service"
+  event_subscription_post_endpoint = "https://webhook.site/354c1096-062a-47be-8699-6b6462d1a6ac"
 
-  // globals
   tags                  = local.tags
   vpc_id                = module.vpc.vpc_id
   vpc_subnet_group_name = module.vpc.db_subnet_group_name
@@ -61,16 +61,11 @@ module "service_resources" {
   aws_region            = var.aws_region
 
   firehose_s3_event_archive_stream_arn         = module.eventbridge.s3_firehose_stream_arn
+  event_subscriber_connection_arn              = module.eventbridge.event_subscriber_connection_arn
   event_bridge_firehose_s3_invocation_role_arn = module.eventbridge.event_bridge_firehose_s3_invocation_role_arn
-
-  // service specific
-  service_name           = each.key
-  enable_dynamodb_access = each.value.enable_dynamodb_access
-  create_ecr_repo        = each.value.create_ecr_repo
-  postgres_databases     = each.value.postgres_dbs
-  mysql_databases        = each.value.mysql_dbs
-  mariadb_databases      = each.value.mariadb_dbs
-  eventbus               = each.value.publishes_events
+  event_subscribers                            = {
+    "CreateAnimalEvent" = module.my-awesome-service.eventbridge_subscription_destination_arn
+  }
 }
 
 data "aws_eks_cluster" "cluster" {

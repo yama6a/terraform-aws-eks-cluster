@@ -1,5 +1,6 @@
 data "aws_caller_identity" "current_aws_account" {}
 
+// Event Bus that the current service will publish events on
 module "eventbridge" {
   source = "registry.terraform.io/terraform-aws-modules/eventbridge/aws"
 
@@ -49,7 +50,7 @@ resource "aws_iam_policy" "eventbridge_policy" {
           "events:DescribeEndpoint"
         ],
         "Resource" : [
-          "arn:aws:events:eu-west-1:902409284726:event-bus/my-awesome-service",
+          "arn:aws:events:eu-west-1:902409284726:event-bus/${var.event_bus_name}",
           "arn:aws:events:*:902409284726:endpoint/*"
         ]
       },
