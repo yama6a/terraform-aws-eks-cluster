@@ -18,3 +18,7 @@ output "event_subscriber_connection_role_arn" {
   description = "The ARN of the IAM role that is used by Eventbridge to invoke the API Destinations through the pre-created connection."
 }
 
+output "event_subscriber_connection_secret_arn" {
+  value       = aws_cloudwatch_event_connection.event_subscriber_connection.secret_arn
+  description = "The ARN of the API Key used to publish events to services."
+}

@@ -8,18 +8,9 @@ resource "aws_cloudwatch_event_connection" "event_subscriber_connection" {
   auth_parameters {
     api_key {
       key   = "x-api-key"
-      value = aws_secretsmanager_secret_version.subscription_api_key_secret_version.secret_string
+      value = random_password.subscription_api_key_string.result
     }
   }
-}
-
-resource "aws_secretsmanager_secret" "subscription_api_key_secret" {
-  name = "global-eventbridge-subscription-api-key_${random_string.suffix.result}"
-}
-
-resource "aws_secretsmanager_secret_version" "subscription_api_key_secret_version" {
-  secret_id     = aws_secretsmanager_secret.subscription_api_key_secret.id
-  secret_string = random_password.subscription_api_key_string.result
 }
 
 // random password of 32 alphanum characters
@@ -29,14 +20,6 @@ resource "random_password" "subscription_api_key_string" {
   min_lower   = 3
   min_upper   = 3
   min_numeric = 3
-}
-
-resource "random_string" "suffix" {
-  length  = 8
-  special = false
-  upper   = false
-  lower   = true
-  number  = true
 }
 
 // allow eventbridge to invoke the api destinations specified to subscribe to this event bus
