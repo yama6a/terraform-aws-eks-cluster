@@ -20,7 +20,5 @@ variable "event_bridge_firehose_s3_catchall_invocation_role_arn" {
 
 variable "tags" {
   type        = map(string)
-  default     = {}
   description = "Map of tags to be attached to all AWS resources"
 }
-

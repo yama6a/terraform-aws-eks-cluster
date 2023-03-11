@@ -131,7 +131,7 @@ resource "aws_iam_policy" "rds_iam_policy" {
 
 // When destroying TF resources, secrets still hang around in AWS while they are scheduled for deletion.
 // So, we add a random suffix to the secret name to ensure that the secret can be created again with the "same" name.
-resource "random_string" "random" {
+resource "random_password" "random" {
   length  = 8
   numeric = true
   lower   = true
@@ -140,7 +140,7 @@ resource "random_string" "random" {
 }
 
 resource "aws_secretsmanager_secret" "password" {
-  name = "${var.service_name}-${var.instance_name}-rds-password-${random_string.random.result}"
+  name = "${var.service_name}-${var.instance_name}-rds-password-${random_password.random.result}"
 }
 
 resource "aws_secretsmanager_secret_version" "password" {
