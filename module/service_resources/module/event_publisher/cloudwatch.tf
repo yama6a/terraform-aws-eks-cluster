@@ -13,8 +13,16 @@ resource "aws_cloudwatch_log_group" "cloudwatch_log_group" {
 }
 
 resource "aws_kms_alias" "cloudwatch_events_encryption_key_alias" {
-  name          = "alias/cloudwatch_events_encryption_key"
+  name          = "alias/cloudwatch_events_encryption_key_${random_string.suffix.result}"
   target_key_id = aws_kms_key.cloudwatch_events_encryption_key.key_id
+}
+
+resource "random_string" "suffix" {
+  length  = 8
+  special = false
+  upper   = false
+  lower   = true
+  number  = true
 }
 
 resource "aws_kms_key" "cloudwatch_events_encryption_key" {

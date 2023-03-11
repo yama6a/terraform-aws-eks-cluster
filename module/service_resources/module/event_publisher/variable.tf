@@ -22,8 +22,3 @@ variable "tags" {
   type        = map(string)
   description = "Map of tags to be attached to all AWS resources"
 }
-
-variable "event_subscribers" {
-  description = "Map of event name to subscriber target ARNs"
-  type        = map(list(string))
-}

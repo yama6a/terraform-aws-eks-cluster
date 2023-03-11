@@ -26,3 +26,7 @@ output "vpc_id" {
 output "my-awesome-service" {
   value = module.my-awesome-service
 }
+
+output "my-awesome-service2" {
+  value = module.my-awesome-service2
+}

@@ -1,17 +1,5 @@
 data "aws_caller_identity" "current_aws_account" {}
 
-module "targets_with_dlq" {
-  source   = "./module/rule"
-  for_each = var.event_subscribers
-
-  event_bus_name                       = module.eventbridge.eventbridge_bus_name
-  event_subscriber_connection_role_arn = aws_iam_role.event_subscriber_connection_role.arn
-  tags                                 = var.tags
-
-  event_name          = each.key
-  subscriber_dst_arns = each.value
-}
-
 // Event Bus that the current service will publish events on
 module "eventbridge" {
   source = "registry.terraform.io/terraform-aws-modules/eventbridge/aws"
