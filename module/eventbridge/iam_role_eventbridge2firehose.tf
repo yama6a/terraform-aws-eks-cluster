@@ -1,5 +1,5 @@
-resource "aws_iam_role" "event_bridge_firehose_s3_catchall_invocation_role" {
-  name = "event_bridge_firehose_s3_catchall_invocation_role"
+resource "aws_iam_role" "eventbridge_to_firehose_iam_role" {
+  name = "eventbridge_to_firehose_iam_role"
   tags = var.tags
 
   assume_role_policy = jsonencode({
@@ -18,11 +18,11 @@ resource "aws_iam_role" "event_bridge_firehose_s3_catchall_invocation_role" {
 
   inline_policy {
     name   = "firehose_s3_stream_policy"
-    policy = data.aws_iam_policy_document.event_bridge_firehose_policy.json
+    policy = data.aws_iam_policy_document.eventbridge_to_firehose_iam_policy.json
   }
 }
 
-data "aws_iam_policy_document" "event_bridge_firehose_policy" {
+data "aws_iam_policy_document" "eventbridge_to_firehose_iam_policy" {
   statement {
     actions = [
       "firehose:PutRecord",

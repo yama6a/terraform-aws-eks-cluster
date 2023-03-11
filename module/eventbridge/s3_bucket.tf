@@ -28,7 +28,7 @@ resource "aws_kms_key" "s3_event_archive_encryption_key" {
         "Sid" : "Allow use of the key",
         Effect = "Allow"
         "Principal" : {
-          "AWS" : aws_iam_role.firehose_role.arn
+          "AWS" : aws_iam_role.firehose_to_s3_iam_role.arn
         },
         Action = [
           "kms:Encrypt",

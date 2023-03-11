@@ -1,6 +1,14 @@
 resource "aws_kms_alias" "ecr_encryption_key_alias" {
-  name          = "alias/ecr_encryption_key"
+  name          = "alias/ecr_encryption_key_${random_string.suffix.result}"
   target_key_id = aws_kms_key.ecr_encryption_key.key_id
+}
+
+resource "random_string" "suffix" {
+  length  = 8
+  special = false
+  upper   = false
+  lower   = true
+  number  = true
 }
 
 resource "aws_kms_key" "ecr_encryption_key" {

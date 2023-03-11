@@ -1,34 +1,11 @@
-resource "aws_iam_role" "firehose_role" {
-  name = "firehose_s3_event_archive_role"
-  tags = var.tags
-
-  assume_role_policy = jsonencode({
-    "Version" : "2012-10-17",
-    "Statement" : [
-      {
-        "Action" : "sts:AssumeRole",
-        "Principal" : {
-          "Service" : "firehose.amazonaws.com"
-        },
-        "Effect" : "Allow",
-        "Sid" : ""
-      }
-    ]
-  })
-
-  inline_policy {
-    name   = "firehose_s3_stream_policy"
-    policy = data.aws_iam_policy_document.firehose_inline_policy.json
-  }
-}
-
+// This file creates a Kinesis Firehose stream that archives events from an Eventbridge stream to an S3 bucket.
 resource "aws_kinesis_firehose_delivery_stream" "firehose_s3_event_archive" {
   tags        = var.tags
   name        = "${var.project_name}_firehose_s3_event_archive"
   destination = "extended_s3"
 
   extended_s3_configuration {
-    role_arn   = aws_iam_role.firehose_role.arn
+    role_arn   = aws_iam_role.firehose_to_s3_iam_role.arn
     bucket_arn = aws_s3_bucket.event_archive.arn
 
     buffer_size         = 64

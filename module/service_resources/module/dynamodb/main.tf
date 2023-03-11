@@ -1,3 +1,5 @@
+data "aws_caller_identity" "current" {}
+
 resource "aws_iam_policy" "dynamodb_policy" {
   name = "${var.service_name}-dynamodb-policy"
   tags = var.tags
@@ -23,7 +25,7 @@ resource "aws_iam_policy" "dynamodb_policy" {
           "dynamodb:UpdateTable",
           "dynamodb:DescribeTable",
         ],
-        Resource : "arn:aws:dynamodb:*:902409284726:table/${var.service_name}.*"
+        Resource : "arn:aws:dynamodb:*:${data.aws_caller_identity.current.account_id}:table/${var.service_name}.*"
       },
       {
         "Effect" : "Allow",
@@ -38,8 +40,8 @@ resource "aws_iam_policy" "dynamodb_policy" {
           "dynamodb:GetRecords"
         ],
         Resource : [
-          "arn:aws:dynamodb:*:902409284726:table/${var.service_name}.*/index/*",
-          "arn:aws:dynamodb:*:902409284726:table/${var.service_name}.*/stream/*"
+          "arn:aws:dynamodb:*:${data.aws_caller_identity.current.account_id}:table/${var.service_name}.*/index/*",
+          "arn:aws:dynamodb:*:${data.aws_caller_identity.current.account_id}:table/${var.service_name}.*/stream/*"
         ]
       }
     ]
