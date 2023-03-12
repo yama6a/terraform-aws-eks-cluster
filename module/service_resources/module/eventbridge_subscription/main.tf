@@ -1,7 +1,11 @@
 data "aws_caller_identity" "current_aws_account" {}
 
+locals {
+  rule_suffix = var.rule_suffix == "" ? "" : "__${var.rule_suffix}"
+}
+
 resource "aws_cloudwatch_event_rule" "event_rule" {
-  name           = "${var.event_bus_name}.${var.event_name}__${var.subscriber_service_name}_sub"
+  name           = "${var.event_name}__${var.subscriber_service_name}${local.rule_suffix}"
   event_bus_name = var.event_bus_name
   is_enabled     = true
   tags           = var.tags
@@ -35,7 +39,7 @@ resource "aws_cloudwatch_event_target" "eventbus_target" {
 
 // DLQ for undelivered messages
 resource "aws_sqs_queue" "dead_letter_queue" {
-  name                      = "${var.event_bus_name}_${var.event_name}__${var.subscriber_service_name}_dead-letter"
+  name                      = "${var.event_bus_name}__${var.event_name}__${var.subscriber_service_name}${local.rule_suffix}__DLQ"
   message_retention_seconds = 1209600
   tags                      = var.tags
 }
