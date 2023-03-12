@@ -22,7 +22,7 @@ resource "random_string" "suffix" {
   special = false
   upper   = false
   lower   = true
-  number  = true
+  numeric = true
 }
 
 resource "aws_kms_key" "cloudwatch_events_encryption_key" {

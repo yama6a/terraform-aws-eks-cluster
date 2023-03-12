@@ -48,7 +48,7 @@ module "rds_postgres" {
   performance_insights_retention_period = 7
   create_monitoring_role                = true
   monitoring_interval                   = 60
-  monitoring_role_name                  = "rds-monitoring-role-${var.instance_name}"
+  monitoring_role_name                  = "rds-monitoring-role-${var.service_name}-${var.instance_name}"
   monitoring_role_use_name_prefix       = false
   monitoring_role_description           = "Monitoring role for RDS instance ${var.instance_name}"
 
@@ -95,7 +95,6 @@ module "security_group" {
 }
 
 
-// used for IAM auth, doesn't properly work at the moment, so we're using user/pw auth via secret manager below
 resource "aws_iam_policy" "rds_iam_policy" {
   name = "${var.service_name}-${var.instance_name}-rds-policy"
   tags = var.tags

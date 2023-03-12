@@ -66,3 +66,8 @@ variable "event_subscriber_connection_role_arn" {
   description = "The ARN of the role to be used for event subscriptions"
   type        = string
 }
+
+variable "event_subscriber_api_token_policy_arn" {
+  description = "The ARN of the policy to be used for Service Accounts to access the secret holding the API token"
+  type        = string
+}

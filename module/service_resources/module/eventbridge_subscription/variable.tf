@@ -37,3 +37,9 @@ variable "api_destination_arn" {
   description = "The ARN of the API destination to be used for event subscriptions"
   type        = string
 }
+
+variable "rule_suffix" {
+  description = "The suffix to be used for the event rule name. Can be omitted if the service subscribes to the event only once. All subsequent subscriptions need a suffix to be unique"
+  type        = string
+  default     = ""
+}
