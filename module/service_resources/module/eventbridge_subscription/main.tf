@@ -22,7 +22,7 @@ resource "aws_cloudwatch_event_rule" "event_rule" {
 
 // wait 10 seconds, because apparently, after the rule is created, it can take a while until the rule is available for the target
 resource "time_sleep" "wait_10_seconds" {
-  depends_on = [aws_cloudwatch_event_rule.event_rule]
+  depends_on      = [aws_cloudwatch_event_rule.event_rule]
   create_duration = "10s"
 }
 

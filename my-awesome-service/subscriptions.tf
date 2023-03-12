@@ -7,10 +7,10 @@ locals {
   // check out the "rule_suffix" variable in the "eventbridge_subscription" module to create unique rules for
   // the same subscription.
   subscriptions = [
-//    {
-//      event_bus_name = "my-awesome-service2"
-//      event_name     = "Service2Event"
-//    },
+    //    {
+    //      event_bus_name = "my-awesome-service2"
+    //      event_name     = "Service2Event"
+    //    },
     {
       event_bus_name = "my-awesome-service"
       event_name     = "AnimalCreatedEvent"
