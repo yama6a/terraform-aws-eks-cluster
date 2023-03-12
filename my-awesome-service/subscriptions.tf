@@ -1,6 +1,11 @@
 locals {
-  subscription_webhook_url = "https://webhook.site/9480d955-5ea6-49c1-8c0f-6f51a8568324"
+  subscription_webhook_url = "https://my-awesome-service.api.yamasa.cloud/event_receiver.php"
 
+  // For now, every service can only subscribe to each event maximum once. That is because we only have one
+  // pre-determined wehbook URL. If we want to have multiple subscriptions to the same event, we need to have
+  // multiple webhook URLs or multiple queues to listen to, which we haven't implemented yet. When we find a fix,
+  // check out the "rule_suffix" variable in the "eventbridge_subscription" module to create unique rules for
+  // the same subscription.
   subscriptions = [
     {
       event_bus_name = "my-awesome-service2"
@@ -17,7 +22,7 @@ module "event_subscription_Service2Event" {
   count = length(local.subscriptions)
 
   source                               = "../module/service_resources/module/eventbridge_subscription"
-  tags                                 = var.tags
+  tags                                 = local.tags
   aws_region                           = var.aws_region
   event_subscriber_connection_arn      = var.event_subscriber_connection_arn
   event_subscriber_connection_role_arn = var.event_subscriber_connection_role_arn

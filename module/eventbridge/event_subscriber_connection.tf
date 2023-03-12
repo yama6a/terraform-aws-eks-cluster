@@ -22,6 +22,30 @@ resource "random_password" "subscription_api_key_string" {
   min_numeric = 3
 }
 
+resource "aws_iam_policy" "subscription_api_key_secret_policy" {
+  name = "eventbridge-subscription-api-key-access-rds-policy"
+  tags = var.tags
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement : [
+      {
+        // Allow an SA to retrieve the API ACCESS KEY from aws secrets manager.
+        // This IAM role still needs to be pegged to every service's SA, so we need to export it.
+        Resource = aws_cloudwatch_event_connection.event_subscriber_connection.secret_arn
+        Effect   = "Allow"
+
+        Action = [
+          "secretsmanager:GetResourcePolicy",
+          "secretsmanager:GetSecretValue",
+          "secretsmanager:DescribeSecret",
+          "secretsmanager:ListSecretVersionIds"
+        ],
+      },
+    ]
+  })
+}
+
 // allow eventbridge to invoke the api destinations specified to subscribe to this event bus
 resource "aws_iam_role" "event_subscriber_connection_role" {
   name = "service-subscription-connection-role"

@@ -16,6 +16,7 @@ module "my-awesome-service" {
   event_bridge_firehose_s3_invocation_role_arn = module.eventbridge.eventbridge_to_firehose_iam_role_arn
   event_subscriber_connection_arn              = module.eventbridge.event_subscriber_connection_arn
   event_subscriber_connection_role_arn         = module.eventbridge.event_subscriber_connection_role_arn
+  event_subscriber_api_token_policy_arn        = module.eventbridge.event_subscriber_api_token_secret_access_policy_arn
 }
 
 
@@ -37,4 +38,5 @@ module "my-awesome-service2" {
   event_bridge_firehose_s3_invocation_role_arn = module.eventbridge.eventbridge_to_firehose_iam_role_arn
   event_subscriber_connection_arn              = module.eventbridge.event_subscriber_connection_arn
   event_subscriber_connection_role_arn         = module.eventbridge.event_subscriber_connection_role_arn
+  event_subscriber_api_token_policy_arn        = module.eventbridge.event_subscriber_api_token_secret_access_policy_arn
 }
