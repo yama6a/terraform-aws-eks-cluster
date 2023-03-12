@@ -24,6 +24,6 @@ output "event_subscriber_connection_secret_arn" {
 }
 
 output "event_subscriber_api_token_secret_access_policy_arn" {
-    value       = aws_iam_policy.subscription_api_key_secret_policy.arn
-    description = "The ARN of the IAM policy that is used to grant access to the API Key used to publish events to services."
+  value       = aws_iam_policy.subscription_api_key_secret_policy.arn
+  description = "The ARN of the IAM policy that is used to grant access to the API Key used to publish events to services."
 }

@@ -69,6 +69,6 @@ variable "event_subscriber_connection_role_arn" {
 
 
 variable "event_subscriber_api_token_policy_arn" {
-    description = "The ARN of the policy to be used by SAs to access the secret manager secret containing the API token for event subscriptions"
-    type        = string
+  description = "The ARN of the policy to be used by SAs to access the secret manager secret containing the API token for event subscriptions"
+  type        = string
 }
