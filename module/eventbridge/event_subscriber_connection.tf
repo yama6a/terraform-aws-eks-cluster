@@ -1,5 +1,6 @@
 data "aws_caller_identity" "current" {}
 
+// ToDo: Move this to the service's terraform module because if one service returns 401 to eventbridge, it will stop all other services from receiving events.
 resource "aws_cloudwatch_event_connection" "event_subscriber_connection" {
   name               = "service-subscription-connection"
   description        = "Connection Definition for EventBridge Service Subscriptions via Access Token"
