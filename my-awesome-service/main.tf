@@ -74,6 +74,31 @@ module "event_publisher" {
   event_bridge_firehose_s3_catchall_invocation_role_arn = var.event_bridge_firehose_s3_invocation_role_arn
 }
 
+module "event_subscriber" {
+  source = "../module/service_resources/module/event_subscriber"
+
+  tags                    = local.tags
+  subscriber_service_name = var.service_name
+
+  subscriptions = [
+    {
+      event_bus_name = "my-awesome-service2"
+      event_name     = "Service2Event"
+      messageGroupId = "default"
+    },
+    {
+      event_bus_name = "my-awesome-service"
+      event_name     = "AnimalCreatedEvent"
+      messageGroupId = "default"
+    },
+    {
+      event_bus_name = "my-awesome-service"
+      event_name     = "AnimalCreatedEvent"
+      messageGroupId = "metrics-counter"
+    },
+  ]
+}
+
 module "irsa" {
   source = "../module/service_resources/module/irsa"
 
@@ -84,11 +109,14 @@ module "irsa" {
   oidc_url     = var.oidc_url
 
   policy_arns = tolist([
+    // db permissions
     module.main_postgres.iam_policy_arn,
     module.main_mysql.iam_policy_arn,
     module.main_mariadb.iam_policy_arn,
     module.activate_dynamodb.iam_policy_arn,
-    module.event_publisher.iam_policy_arn,
-    var.event_subscriber_api_token_policy_arn,
+
+    // pub/sub permissions
+    module.event_publisher.iam_eventbridge_publishing_policy_arn,
+    module.event_subscriber.iam_sqs_consumer_policy_arn
   ])
 }

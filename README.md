@@ -5,6 +5,11 @@
     - `aws eks --region $(terraform output -raw region) update-kubeconfig --name $(terraform output -raw cluster_name)`
 3. (optional) Install Metrics server (required for CPU/Mem based HPAs):
     - `kubectl apply -f k8s/metrics-server.yaml`
+4. If you run into issues of some essential pods not starting up, e.g. when the k8s dashboard doesn't work, then the
+   VCNI prefix delegation wasn't activated (probably a race condition, need to look into it). You can fix it by running
+   the following commands:
+    - `kubectl set env daemonset aws-node -n kube-system ENABLE_PREFIX_DELEGATION=true`
+    - `terraform apply -replace="module.eks.module.eks.module.eks_managed_node_group[\"$(terraform output -raw cluster_node_group_name)\"].aws_eks_node_group.this[0]"`
 
 ### K8S Dashboard (optional)
 

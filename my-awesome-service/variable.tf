@@ -56,18 +56,3 @@ variable "event_bridge_firehose_s3_invocation_role_arn" {
   description = "The ARN of the IAM role which is used to invoke the Kinesis Firehose stream which pipes into s3 to which all events are archived"
   type        = string
 }
-
-variable "event_subscriber_connection_arn" {
-  description = "The ARN of the connection to be used for event subscriptions"
-  type        = string
-}
-
-variable "event_subscriber_connection_role_arn" {
-  description = "The ARN of the role to be used for event subscriptions"
-  type        = string
-}
-
-variable "event_subscriber_api_token_policy_arn" {
-  description = "The ARN of the policy to be used for Service Accounts to access the secret holding the API token"
-  type        = string
-}

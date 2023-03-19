@@ -1,4 +1,4 @@
-data "aws_caller_identity" "current_account" {}
+data "aws_caller_identity" "current" {}
 
 resource "aws_kms_alias" "s3_event_archive_encryption_key_alias" {
   name          = "alias/s3_event_archive_encryption_key"
@@ -19,7 +19,7 @@ resource "aws_kms_key" "s3_event_archive_encryption_key" {
         "Sid" : "Enable IAM User Permissions",
         "Effect" : "Allow",
         "Principal" : {
-          "AWS" : "arn:aws:iam::${data.aws_caller_identity.current_account.account_id}:root"
+          "AWS" : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
         },
         "Action" : "kms:*",
         "Resource" : "*"
