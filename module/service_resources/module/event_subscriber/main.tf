@@ -55,20 +55,21 @@ resource "aws_sqs_queue" "dead_letter_queue" {
 # Allow the EventBridge to send messages to the SQS queue.
 resource "aws_sqs_queue_policy" "eventbridge_to_sqs_policy" {
   queue_url = aws_sqs_queue.subscription_queue.id
-  policy    = jsonencode({
-    Version: "2012-10-17",
-    Id: "sqspolicy",
-    Statement: [
+
+  policy = jsonencode({
+    Version : "2012-10-17",
+    Id : "sqspolicy",
+    Statement : [
       {
-        Effect: "Allow",
-        Principal: {
-          Service: "events.amazonaws.com"
+        Effect : "Allow",
+        Principal : {
+          Service : "events.amazonaws.com"
         },
-        Action: "sqs:SendMessage",
-        Resource: aws_sqs_queue.subscription_queue.arn,
-        Condition: {
-          "ForAnyValue:ArnEquals": {
-            "aws:SourceArn": module.sqs_event_subscription[*].event_rule_arn
+        Action : "sqs:SendMessage",
+        Resource : aws_sqs_queue.subscription_queue.arn,
+        Condition : {
+          "ForAnyValue:ArnEquals" : {
+            "aws:SourceArn" : module.sqs_event_subscription[*].event_rule_arn
           }
         }
       }

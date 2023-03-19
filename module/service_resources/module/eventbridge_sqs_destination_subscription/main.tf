@@ -18,19 +18,23 @@ resource "aws_cloudwatch_event_rule" "event_rule" {
 
 // wait 10 seconds, because apparently, after the rule is created, it can take a while until the rule is available for the target
 resource "time_sleep" "wait_10_seconds" {
-  depends_on      = [
-    aws_cloudwatch_event_rule.event_rule]
+  depends_on = [
+    aws_cloudwatch_event_rule.event_rule
+  ]
+
   create_duration = "10s"
 }
 
 // eventbus target for api destination
 resource "aws_cloudwatch_event_target" "eventbus_target" {
+  depends_on = [
+    time_sleep.wait_10_seconds
+  ]
+
   event_bus_name = var.event_bus_name
   arn            = var.subscription_queue_arn
   rule           = aws_cloudwatch_event_rule.event_rule.name
 
-  depends_on = [
-    time_sleep.wait_10_seconds]
 
   sqs_target {
     message_group_id = var.messageGroupId

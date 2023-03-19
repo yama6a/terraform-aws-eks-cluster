@@ -79,7 +79,8 @@ module "event_subscriber" {
 
   tags                    = local.tags
   subscriber_service_name = var.service_name
-  subscriptions           = [
+
+  subscriptions = [
     {
       event_bus_name = "my-awesome-service2"
       event_name     = "Service2Event"

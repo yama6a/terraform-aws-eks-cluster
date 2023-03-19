@@ -10,9 +10,10 @@ variable "subscriber_service_name" {
 
 variable "subscriptions" {
   description = "A list of subscriptions to create"
-  type        = list(object({
+
+  type = list(object({
     event_bus_name = string
     event_name     = string
-    messageGroupId    = string
+    messageGroupId = string
   }))
 }
