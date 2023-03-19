@@ -37,3 +37,13 @@ output "eventbridge_bus_arn" {
   description = "Created EventBridge Bus ARN"
   value       = module.event_publisher.event_bus_arn
 }
+
+output "event_subscription_queue_url" {
+  description = "Created Event Queue URL"
+  value       = module.event_subscriber.sqs_subscription_queue_url
+}
+
+output "event_subscription_dlq_url" {
+  description = "Created Event DLQ URL"
+  value       = module.event_subscriber.sqs_dead_letter_queue_url
+}

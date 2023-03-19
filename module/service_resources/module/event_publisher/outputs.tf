@@ -1,4 +1,4 @@
-output "iam_policy_arn" {
+output "iam_eventbridge_publishing_policy_arn" {
   description = "The ARN of the policy created for Eventbridge publishing access"
   value       = aws_iam_policy.eventbridge_policy.arn
 }
