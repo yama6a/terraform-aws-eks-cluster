@@ -23,15 +23,10 @@ output "vpc_id" {
   value       = module.vpc.vpc_id
 }
 
-output "event_subscriber_connection_token_secret_arn" {
-  value       = module.eventbridge.event_subscriber_connection_secret_arn
-  description = "The ARN of the API Key used to publish events to services."
-}
-
 output "my-awesome-service" {
   value = module.my-awesome-service
 }
 
-//output "my-awesome-service2" {
-//  value = module.my-awesome-service2
-//}
+output "my-awesome-service2" {
+  value = module.my-awesome-service2
+}
