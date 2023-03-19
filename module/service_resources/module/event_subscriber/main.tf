@@ -1,4 +1,4 @@
-module "sqs_event_subscription" {
+module "sqs_event_subscriptions" {
   count = length(var.subscriptions)
 
   source                  = "../eventbridge_sqs_destination_subscription"
@@ -9,22 +9,21 @@ module "sqs_event_subscription" {
   event_name             = var.subscriptions[count.index].event_name
   messageGroupId         = var.subscriptions[count.index].messageGroupId
   subscription_queue_arn = aws_sqs_queue.subscription_queue.arn
-  dead_letter_queue_arn  = aws_sqs_queue.dead_letter_queue.arn
 }
 
 
 // Subscription queue for events
 // We use a FIFO queue for two reasons (despite lower throughput - which is still easily good enough)
-// 1) FIFO queues guarantee exactly-once-delivery, which removed the deduplication-burden from us
+// 1) FIFO queues guarantee exactly-once-delivery, which removes the deduplication-burden from the message receiver.
 // 2) FIFO queues allow us to peg a messageGroupID to messages, which we can use in case a service needs
-//     to subscribe more than once to a certain event, by letting the subscriber know which subscription
-//     a message belongs to, leveraging the messageGroupID field (see message_group_id in the subscriber TF module).
+//     to subscribe to the same event more than once, by letting the subscriber know which subscription a message
+//     belongs to, leveraging the messageGroupID field (see messageGroupId above in the subscription TF module).
 resource "aws_sqs_queue" "subscription_queue" {
   name       = "${var.subscriber_service_name}__events.fifo"
   tags       = var.tags
   fifo_queue = true
 
-  // this allows the same message to appear multiple times and not get deduplicated if they appear in different message groups.
+  // this allows a message to appear multiple times and not get deduplicated, as long as they have different message groups.
   deduplication_scope         = "messageGroup"
   content_based_deduplication = true
 
@@ -44,7 +43,7 @@ resource "aws_sqs_queue" "dead_letter_queue" {
   tags       = var.tags
   fifo_queue = true
 
-  // this allows the same message to appear multiple times and not get deduplicated if they appear in different message groups.
+  // this allows a message to appear multiple times and not get deduplicated, as long as they have different message groups.
   deduplication_scope         = "messageGroup"
   content_based_deduplication = true
 
@@ -52,7 +51,7 @@ resource "aws_sqs_queue" "dead_letter_queue" {
   message_retention_seconds = 1209600
 }
 
-# Allow the EventBridge to send messages to the SQS queue.
+// Allow the EventBridge to send messages to the SQS queue.
 resource "aws_sqs_queue_policy" "eventbridge_to_sqs_policy" {
   queue_url = aws_sqs_queue.subscription_queue.id
 
@@ -69,7 +68,7 @@ resource "aws_sqs_queue_policy" "eventbridge_to_sqs_policy" {
         Resource : aws_sqs_queue.subscription_queue.arn,
         Condition : {
           "ForAnyValue:ArnEquals" : {
-            "aws:SourceArn" : module.sqs_event_subscription[*].event_rule_arn
+            "aws:SourceArn" : module.sqs_event_subscriptions[*].event_rule_arn
           }
         }
       }
@@ -77,6 +76,10 @@ resource "aws_sqs_queue_policy" "eventbridge_to_sqs_policy" {
   })
 }
 
+// Allow a SA that has this policy pegged to it, to:
+// 1. Receive messages and see basic queue info
+// 2. Delete messages (after successful consumption)
+// 3. Put messages back onto the queue with a modified VisibilityTimeout (to implement a backoff for failed messages)
 resource "aws_iam_policy" "consumer_policy" {
   name = "${var.subscriber_service_name}-sqs-event-subscriber-policy"
   tags = var.tags

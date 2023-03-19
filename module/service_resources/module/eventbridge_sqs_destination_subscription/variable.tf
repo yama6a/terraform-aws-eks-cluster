@@ -31,8 +31,3 @@ variable "subscription_queue_arn" {
   description = "The ARN of the queue to which the event is to be sent"
   type        = string
 }
-
-variable "dead_letter_queue_arn" {
-  description = "The ARN of the dead letter queue to which the event is to be sent if the subscription queue is full or otherwise fails to receive the event from eventbridge"
-  type        = string
-}
