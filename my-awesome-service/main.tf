@@ -77,6 +77,12 @@ module "event_publisher" {
 module "event_subscriber" {
   source = "../module/service_resources/module/event_subscriber"
 
+  // this ensures that the event-bus exists if a service is subscribed to its own events.
+  // also, it increases the 'chances' that a different service's event-bus exists before the subscription is created
+  depends_on = [
+    module.event_publisher
+  ]
+
   tags                    = local.tags
   subscriber_service_name = var.service_name
 
