@@ -3,6 +3,7 @@ data "aws_caller_identity" "current_aws_account" {}
 // Event Bus that the current service will publish events on
 module "eventbridge" {
   source = "registry.terraform.io/terraform-aws-modules/eventbridge/aws"
+  version = "1.17.3"
 
   bus_name = var.event_bus_name
   tags     = var.tags

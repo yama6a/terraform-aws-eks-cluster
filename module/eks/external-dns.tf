@@ -7,6 +7,7 @@
 module "external_dns" {
   count  = (length(var.domains) > 0) ? 1 : 0
   source = "registry.terraform.io/lablabs/eks-external-dns/aws"
+  version = "1.1.0"
 
   enabled = true
 

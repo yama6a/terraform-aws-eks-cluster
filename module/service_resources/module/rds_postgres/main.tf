@@ -8,7 +8,7 @@ module "rds_postgres" {
   tags       = var.tags
 
   engine                              = "postgres"
-  engine_version                      = "14.5"
+  engine_version                      = "14.8"
   family                              = "postgres14"
   major_engine_version                = "14"
   port                                = 5432
