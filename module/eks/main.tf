@@ -19,7 +19,7 @@ resource "aws_kms_key" "eks_cluster_secrets_key" {
 module "eks" {
   source          = "registry.terraform.io/terraform-aws-modules/eks/aws"
   version         = "~> 18.0"
-  cluster_version = "1.23"
+  cluster_version = "1.24"
   cluster_name    = var.cluster_name
   tags            = var.tags
 
@@ -65,7 +65,7 @@ module "eks" {
       # Keep number of network interfaces in mind! EC2 instances have a limit depending on instance-type.
       # Our cluster consumes 8 pods by default (per node?).
       # Number of pods per instance-type: https://github.com/awslabs/amazon-eks-ami/blob/master/files/eni-max-pods.txt
-      instance_types = var.high_availability == true ? ["m5.large"] : ["t3.small"]
+      instance_types = var.high_availability == true ? ["m5.large"] : ["t3.medium"]
       desired_size   = var.high_availability == true ? 3 : 1
       min_size       = var.high_availability == true ? 3 : 1
       max_size       = var.high_availability == true ? 5 : 1

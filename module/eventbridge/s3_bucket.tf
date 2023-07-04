@@ -44,8 +44,9 @@ resource "aws_kms_key" "s3_event_archive_encryption_key" {
 }
 
 resource "aws_s3_bucket" "event_archive" {
-  bucket        = "${replace(var.project_name, "_", "-")}-event-archive"
-  tags          = var.tags
+  bucket = "${replace(var.project_name, "_", "-")}-event-archive"
+  tags   = var.tags
+
   force_destroy = true
 }
 
@@ -61,8 +62,16 @@ resource "aws_s3_bucket_lifecycle_configuration" "infrequent_access" {
     }
   }
 }
+resource "aws_s3_bucket_ownership_controls" "event_archive" {
+  bucket = aws_s3_bucket.event_archive.id
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
+}
 
-resource "aws_s3_bucket_acl" "private_bucket_acl" {
+resource "aws_s3_bucket_acl" "event_archive_acl" {
+  depends_on = [aws_s3_bucket_ownership_controls.event_archive]
+
   bucket = aws_s3_bucket.event_archive.id
   acl    = "private"
 }

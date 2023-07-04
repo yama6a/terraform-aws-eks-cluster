@@ -5,8 +5,9 @@
 # Ref: convert K8S to TF (download release, homebrew version is broken): https://github.com/sl1pm4t/k2tf
 
 module "external_dns" {
-  count  = (length(var.domains) > 0) ? 1 : 0
-  source = "registry.terraform.io/lablabs/eks-external-dns/aws"
+  count   = (length(var.domains) > 0) ? 1 : 0
+  source  = "registry.terraform.io/lablabs/eks-external-dns/aws"
+  version = "1.1.0"
 
   enabled = true
 
