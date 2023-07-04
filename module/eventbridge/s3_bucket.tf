@@ -44,8 +44,8 @@ resource "aws_kms_key" "s3_event_archive_encryption_key" {
 }
 
 resource "aws_s3_bucket" "event_archive" {
-  bucket        = "${replace(var.project_name, "_", "-")}-event-archive"
-  tags          = var.tags
+  bucket = "${replace(var.project_name, "_", "-")}-event-archive"
+  tags   = var.tags
 
   force_destroy = true
 }
