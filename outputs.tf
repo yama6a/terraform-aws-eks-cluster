@@ -3,11 +3,6 @@ output "region" {
   value       = var.aws_region
 }
 
-output "cluster_id" {
-  description = "EKS cluster ID."
-  value       = module.eks.cluster_id
-}
-
 output "cluster_name" {
   description = "EKS cluster Name."
   value       = module.eks.cluster_name
@@ -23,10 +18,10 @@ output "vpc_id" {
   value       = module.vpc.vpc_id
 }
 
-output "my-awesome-service" {
-  value = module.my-awesome-service
-}
+#output "my-awesome-service" {
+#  value = module.my-awesome-service
+#}
 
-output "my-awesome-service2" {
-  value = module.my-awesome-service2
-}
+#output "my-awesome-service2" {
+#  value = module.my-awesome-service2
+#}

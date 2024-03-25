@@ -30,14 +30,15 @@ locals {
 
 module "external_secrets_helm" {
   source  = "registry.terraform.io/lablabs/eks-external-secrets/aws"
-  version = "1.0.0"
+  version = "~> 1.0"
+  depends_on = [time_sleep.wait_60_seconds_after_cluster_creation]
 
   enabled           = true
   argo_enabled      = false
   argo_helm_enabled = false
 
   // enables 2 pods on separate nodes for fault tolerance purposes.
-  values = var.high_availability ? yamlencode(local.values) : ""
+  values = yamlencode(local.values)
 
   helm_timeout = 240
   helm_wait    = true

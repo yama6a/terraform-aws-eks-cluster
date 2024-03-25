@@ -15,6 +15,6 @@ domains = {
 }
 
 tags = {
-  terraformSource = "https://github.com/ymakhloufi/terraform-aws-eks-cluster"
+  terraformSource = "https://github.com/yama6a/terraform-aws-eks-cluster"
 }
 

@@ -10,7 +10,7 @@ output "iam_policy_arn" {
 
 output "password_asm_secret_arn" {
   description = "The ARN for the secret holding the MySQL RDS password in AWS Secret Manager"
-  value       = aws_secretsmanager_secret.password.arn
+  value       = module.rds_mysql.db_instance_master_user_secret_arn
 }
 
 output "host" {

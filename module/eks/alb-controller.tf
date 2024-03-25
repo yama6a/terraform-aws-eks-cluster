@@ -11,7 +11,7 @@ module "lb-controller" {
 
   helm = {
     vars = {
-      clusterName = module.eks.cluster_id
+      clusterName = module.eks.cluster_name
     }
   }
 }

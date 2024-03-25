@@ -18,8 +18,8 @@ resource "aws_kms_key" "eks_cluster_secrets_key" {
 
 module "eks" {
   source          = "registry.terraform.io/terraform-aws-modules/eks/aws"
-  version         = "~> 18.0"
-  cluster_version = "1.24"
+  version         = "~> 19.0"
+  cluster_version = "1.28"
   cluster_name    = var.cluster_name
   tags            = var.tags
 
@@ -35,15 +35,25 @@ module "eks" {
   cluster_addons = {
     coredns    = {}
     kube-proxy = {}
-    # vpc-cni  = {} # do not install vpc-cni explicitly. It will be installed implicitly, but then replaced by vcni.tf
+    vpc-cni = {
+      before_compute = true # ensure the addon is configured before data plane compute resources are created
+      most_recent    = true # To ensure access to the latest settings provided
+      configuration_values = jsonencode({
+        env = {
+          # Reference docs https://docs.aws.amazon.com/eks/latest/userguide/cni-increase-ip-addresses.html
+          ENABLE_PREFIX_DELEGATION = "true"
+          WARM_PREFIX_TARGET       = "1"
+        }
+      })
+    }
   }
 
-  cluster_encryption_config = [
-    {
-      provider_key_arn = aws_kms_key.eks_cluster_secrets_key.arn
-      resources        = ["secrets"]
-    }
-  ]
+#  cluster_encryption_config = [
+#    {
+#      provider_key_arn = aws_kms_key.eks_cluster_secrets_key.arn
+#      resources        = ["secrets"]
+#    }
+#  ]
 
 
   eks_managed_node_group_defaults = {
@@ -51,9 +61,10 @@ module "eks" {
     force_update_version = true
     labels               = { role = "worker" }
 
-    # disk size workaround: https://github.com/terraform-aws-modules/terraform-aws-eks/issues/1739
-    create_launch_template = false
-    launch_template_name   = ""
+    # Todo: Not needed anymore? testing now
+#    # disk size workaround: https://github.com/terraform-aws-modules/terraform-aws-eks/issues/1739
+#    create_launch_template = false
+#    launch_template_name   = ""
     disk_size              = var.high_availability == true ? 50 : 10 # in GB
   }
 

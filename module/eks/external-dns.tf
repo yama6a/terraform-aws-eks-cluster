@@ -6,8 +6,9 @@
 
 module "external_dns" {
   count   = (length(var.domains) > 0) ? 1 : 0
+  depends_on = [time_sleep.wait_60_seconds_after_cluster_creation]
   source  = "registry.terraform.io/lablabs/eks-external-dns/aws"
-  version = "1.1.0"
+  version = "~> 1.0"
 
   enabled = true
 
@@ -27,7 +28,13 @@ data "aws_route53_zone" "cloud_hosted_zone" {
 }
 
 provider "kubernetes" {
-  host                   = data.aws_eks_cluster.cluster.endpoint
+  host                   = module.eks.cluster_endpoint
   token                  = data.aws_eks_cluster_auth.cluster.token
-  cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
+  cluster_ca_certificate = module.eks.cluster_certificate_authority_data
+}
+
+resource time_sleep "wait_60_seconds_after_cluster_creation" {
+  depends_on = [module.eks]
+
+  create_duration = "60s"
 }

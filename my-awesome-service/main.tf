@@ -87,11 +87,11 @@ module "event_subscriber" {
   subscriber_service_name = var.service_name
 
   subscriptions = [
-    {
-      event_bus_name = "my-awesome-service2"
-      event_name     = "Service2Event"
-      messageGroupId = "default"
-    },
+#    {
+#      event_bus_name = "my-awesome-service2"
+#      event_name     = "Service2Event"
+#      messageGroupId = "default"
+#    },
     {
       event_bus_name = "my-awesome-service"
       event_name     = "AnimalCreatedEvent"

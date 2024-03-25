@@ -12,30 +12,33 @@
 # There seems to be a better solution, which can modify the ENV of the existing pre-installed vcni addon, which should
 # mitigate (but not solve!) the above-mentioned race-condition, if it ever becomes a problem, try this:
 # https://github.com/aws/eks-charts/tree/master/stable/aws-vpc-cni#adopting-the-existing-aws-node-resources-in-an-eks-cluster
-resource "null_resource" "remove_aws_vpc_cni_plugin" {
-  provisioner "local-exec" {
-    command = format("%s/remove-aws-vpc-cni-plugin.sh", path.module)
 
-    environment = {
-      CLUSTER_ENDPOINT = data.aws_eks_cluster.cluster.endpoint
-      CLUSTER_CA       = data.aws_eks_cluster.cluster.certificate_authority.0.data
-      CLUSTER_TOKEN    = data.aws_eks_cluster_auth.cluster.token
-    }
-  }
-}
+##### Replaced by cluster_addons.vpc-cni in main.tf #####
 
-resource "helm_release" "vcni" {
-  repository = "https://aws.github.io/eks-charts"
-  depends_on = [
-    null_resource.remove_aws_vpc_cni_plugin
-  ]
-
-  name      = "aws-vpc-cni"
-  chart     = "aws-vpc-cni"
-  namespace = "kube-system"
-
-  set {
-    name  = "env.ENABLE_PREFIX_DELEGATION"
-    value = true
-  }
-}
+#resource "null_resource" "remove_aws_vpc_cni_plugin" {
+#  provisioner "local-exec" {
+#    command = format("%s/remove-aws-vpc-cni-plugin.sh", path.module)
+#
+#    environment = {
+#      CLUSTER_ENDPOINT = data.aws_eks_cluster.cluster.endpoint
+#      CLUSTER_CA       = data.aws_eks_cluster.cluster.certificate_authority.0.data
+#      CLUSTER_TOKEN    = data.aws_eks_cluster_auth.cluster.token
+#    }
+#  }
+#}
+#
+#resource "helm_release" "vcni" {
+#  repository = "https://aws.github.io/eks-charts"
+#  depends_on = [
+#    null_resource.remove_aws_vpc_cni_plugin
+#  ]
+#
+#  name      = "aws-vpc-cni"
+#  chart     = "aws-vpc-cni"
+#  namespace = "kube-system"
+#
+#  set {
+#    name  = "env.ENABLE_PREFIX_DELEGATION"
+#    value = true
+#  }
+#}

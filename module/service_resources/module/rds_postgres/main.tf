@@ -1,7 +1,8 @@
 data "aws_caller_identity" "current" {}
 
 module "rds_postgres" {
-  source = "registry.terraform.io/terraform-aws-modules/rds/aws"
+  source  = "registry.terraform.io/terraform-aws-modules/rds/aws"
+  version = "~> 6.0"
 
   identifier = "${var.service_name}-${var.instance_name}"
   db_name    = replace(var.instance_name, "-", "_")
@@ -22,7 +23,6 @@ module "rds_postgres" {
   max_allocated_storage = 100
 
   username               = "dbuser"
-  create_random_password = true
 
   db_subnet_group_name = var.db_subnet_group_name
 
@@ -114,7 +114,7 @@ resource "aws_iam_policy" "rds_iam_policy" {
       },
       {
         // allow SA to retrieve the db password from aws secrets manager
-        Resource = aws_secretsmanager_secret.password.arn
+        Resource = module.rds_postgres.db_instance_master_user_secret_arn
         Effect   = "Allow"
 
         Action = [
@@ -126,23 +126,4 @@ resource "aws_iam_policy" "rds_iam_policy" {
       },
     ]
   })
-}
-
-// When destroying TF resources, secrets still hang around in AWS while they are scheduled for deletion.
-// So, we add a random suffix to the secret name to ensure that the secret can be created again with the "same" name.
-resource "random_password" "random" {
-  length  = 8
-  numeric = true
-  lower   = true
-  special = false
-  upper   = false
-}
-
-resource "aws_secretsmanager_secret" "password" {
-  name = "${var.service_name}-${var.instance_name}-rds-password-${random_password.random.result}"
-}
-
-resource "aws_secretsmanager_secret_version" "password" {
-  secret_id     = aws_secretsmanager_secret.password.id
-  secret_string = module.rds_postgres.db_instance_password
 }

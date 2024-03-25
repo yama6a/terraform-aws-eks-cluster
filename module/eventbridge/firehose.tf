@@ -8,8 +8,8 @@ resource "aws_kinesis_firehose_delivery_stream" "firehose_s3_event_archive" {
     role_arn   = aws_iam_role.firehose_to_s3_iam_role.arn
     bucket_arn = aws_s3_bucket.event_archive.arn
 
-    buffer_size         = 64
-    buffer_interval     = 60
+    buffering_size         = 64
+    buffering_interval     = 60
     prefix              = "events/detail_type=!{partitionKeyFromQuery:detail_type}/year=!{timestamp:yyyy}/month=!{timestamp:MM}/day=!{timestamp:dd}/hour=!{timestamp:HH}/"
     error_output_prefix = "errors/year=!{timestamp:yyyy}/month=!{timestamp:MM}/day=!{timestamp:dd}/hour=!{timestamp:HH}/!{firehose:error-output-type}/"
 

@@ -49,8 +49,8 @@ metadata:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/group.name: sample-app  # use the same group-name to share the ALB (they cost money!)
-    #alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80,"HTTPS":443}]' # enable SSL (the ALB-Controller automatically searches for the HOST specified in the rules below and pegs a matching cert to the ALB)
-    #external-dns.alpha.kubernetes.io/hostname: 2048.example.com,2048.example.edu # if you have a custom domain, add it here and in the TF variable. (this supports a comma-separated list)
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80,"HTTPS":443}]' # enable SSL (the ALB-Controller automatically searches for the HOST specified in the rules below and pegs a matching cert to the ALB)
+    external-dns.alpha.kubernetes.io/hostname: 2048.yamasa.link # if you have a custom domain, add it here and in the TF variable. (this supports a comma-separated list)
 spec:
   ingressClassName: alb
   rules:
